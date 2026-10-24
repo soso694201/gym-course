@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="كورس تضخيم بالصور: 4 تمارين بالأسبوع، كل تمرين برسمة متحركة تبين الحركة والعضلة الشغالة.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%232357d1'/%3E%3Cpath d='M4 10v4M7 7v10M17 7v10M20 10v4M7 12h10' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>كورس التضخيم</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: one picture-card per exercise, stacked like gym posters on a wall; four day buttons on top switch the wall. */
+:root{
+  --bg:#eef1f6; --surface:#ffffff; --surface-2:#e7ebf2; --spot:#f8f9fc; --ink:#121722; --muted:#566073; --line:#d5dbe6;
+  --accent:#2357d1; --accent-ink:#ffffff; --accent-soft:#dfe7fb;
+  --mus:#d8452f; --mus-soft:#fbe1dc;
+  --fig:#1b2231; --fig-far:#a2aabb; --prop:#8a93a6; --prop-soft:#cfd5df; --pad:#b3bbca;
+  --font-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,system-ui,sans-serif;
+  --font-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1016; --surface:#151922; --surface-2:#1d222d; --spot:#262c39; --ink:#e6e9ef; --muted:#97a0b2; --line:#283040;
+    --accent:#6f93ff; --accent-ink:#0a0f1d; --accent-soft:#1b2747;
+    --mus:#ff6f5a; --mus-soft:#3d1c17;
+    --fig:#e1e6ef; --fig-far:#566073; --prop:#6b7487; --prop-soft:#2f3644; --pad:#465063;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1016; --surface:#151922; --surface-2:#1d222d; --spot:#262c39; --ink:#e6e9ef; --muted:#97a0b2; --line:#283040;
+  --accent:#6f93ff; --accent-ink:#0a0f1d; --accent-soft:#1b2747;
+  --mus:#ff6f5a; --mus-soft:#3d1c17;
+  --fig:#e1e6ef; --fig-far:#566073; --prop:#6b7487; --prop-soft:#2f3644; --pad:#465063;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+#app{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.3}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+
+header h1{font-size:26px;font-weight:700}
+header p{color:var(--muted);font-size:14px;margin-top:2px}
+
+.days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.day{display:flex;flex-direction:column;align-items:center;gap:1px;padding:10px 4px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);min-width:0;position:relative}
+.day b{font-family:var(--font-display);font-size:16px;font-weight:600;line-height:1.3;text-align:center}
+.day small{font-size:12px;color:var(--muted);white-space:nowrap}
+.day.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.day.on small{color:inherit;opacity:.85}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.head h2{font-size:22px;font-weight:700}
+.head p{color:var(--muted);font-size:14px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:11px 14px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.note .k{flex:none;width:12px;height:12px;border-radius:3px;background:var(--mus);margin-top:5px}
+
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:14px}
+.pic{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.art{position:relative;background:radial-gradient(120% 90% at 50% 40%,var(--spot),var(--surface-2));padding:8px 8px 4px}
+.art .fig{display:block;width:100%;height:auto}
+.badge{position:absolute;top:10px;inset-inline-start:10px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:15px}
+.opt{position:absolute;top:12px;inset-inline-end:10px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.info{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.info h3{font-size:18px;font-weight:700}
+.mus{font-size:13px;color:var(--mus);font-weight:600;margin-top:2px}
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.nums div{background:var(--surface-2);border-radius:9px;padding:7px 4px;text-align:center;display:flex;flex-direction:column;line-height:1.2}
+.nums b{font-family:var(--font-display);font-size:19px;font-variant-numeric:tabular-nums}
+.nums span{font-size:11.5px;color:var(--muted);margin-top:2px}
+.vid{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;font-size:14.5px;margin-top:auto}
+.vid svg{width:18px;height:18px;fill:currentColor}
+details{border-top:1px solid var(--line);padding-top:8px}
+summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--muted);list-style:none;display:flex;align-items:center;gap:6px;min-height:32px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--surface-2);font-weight:700}
+details[open] summary::before{content:"−"}
+details ol{margin:6px 0 0;padding-inline-start:20px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.alts{margin-top:10px;font-size:13.5px}
+.alts b{font-weight:600}
+.alts a{color:var(--accent);text-decoration:none;font-weight:600}
+
+.rules{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.rules h3{font-size:17px;margin-bottom:8px}
+.rules ol{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+
+/* figures */
+.fig line{stroke-linecap:round}
+.fig .fg{stroke:var(--fig)}
+.fig .far{stroke:var(--fig-far)}
+.fig .fgf{fill:var(--fig);stroke:var(--fig);stroke-width:3;stroke-linejoin:round}
+.fig circle.fgf{stroke:none}
+.fig .hl{stroke:var(--mus)}
+.fig .hlf{fill:var(--mus);stroke:var(--mus);stroke-width:3;stroke-linejoin:round}
+.fig circle.hlf{stroke:none}
+.fig .gh{stroke:var(--fig);opacity:.12}
+.fig .ghf{fill:var(--fig);opacity:.12;stroke:none}
+.fig .prop{stroke:var(--prop)}
+.fig .propf{fill:var(--prop-soft)}
+.fig .padl{stroke:var(--pad)}
+.fig .pad{fill:var(--pad)}
+.fig .cable{stroke:var(--muted);opacity:.8}
+.fig .wt{fill:var(--accent)}
+.fig .hub{fill:var(--surface-2)}
+.fig .wtl{stroke:var(--accent)}
+.fig .hdl{fill:var(--ink)}
+.fig .floor{stroke:var(--line)}
+@media (max-width:420px){.day b{font-size:15px}.head h2{font-size:20px}}
+</style>
+
+</head>
+<body>
+<div id="app" dir="rtl" lang="ar">
+  <header>
+    <h1>كورس التضخيم</h1>
+    <p>4 أيام تمرين بالأسبوع · اختار التمرين وشوف صوره</p>
+  </header>
+  <nav class="days" id="days" aria-label="أيام التمرين"></nav>
+  <div class="head" id="head"></div>
+  <p class="note"><span class="k" aria-hidden="true"></span><span>الأحمر بالصورة = العضلة اللي تشتغل. والخيال الفاتح = وضع البداية. قبل ما تبدي: 5 دقايق إحماء خفيف، ومجموعتين خفاف بأول تمرين.</span></p>
+  <section class="wall" id="wall" aria-live="polite"></section>
+  <section class="rules">
+    <h3>5 قواعد وبس</h3>
+    <ol>
+      <li>تمرّن 4 أيام بالأسبوع بالترتيب: الأول، الثاني، الثالث، الرابع. خلي يوم راحة بعد كل يومين، مثلاً: سبت، أحد، ثلاثاء، أربعاء.</li>
+      <li>كل أسبوع زيد عدّة وحدة أو شوية وزن.</li>
+      <li>وكف وانت تكدر تسوي عدّة أو عدّتين بعد. التمارين الصغيرة (ذراع، كتف جانبي، سمانة) تكدر توصلها للآخر.</li>
+      <li>ارتاح بين المجاميع حسب المكتوب تحت كل صورة.</li>
+      <li>كل 12 أسبوع سوي أسبوع خفيف: نص المجاميع بنفس الوزن.</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const qs = (s, el = document) => el.querySelector(s);
+const qsa = (s, el = document) => Array.from(el.querySelectorAll(s));
+const reduceMotion = (() => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+const yt = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+
+/* ---------- the course ---------- */
+const EX = {
+bench:{n:'بنج بريس بار',en:'barbell bench press',m:'الصدر',fig:'bench',hl:['t'],
+ cues:['رجّع أكتافك لورا وثبّت رجلك بالأرض','نزّل البار على أسفل صدرك بهدوء','الكوع مو مفتوح 90°، خليه مايل لجسمك شوية','ادفع البار لفوك'],
+ alts:['بنج بريس دمبل','تشيست بريس جهاز']},
+csrow:{n:'تجديف صدر مسنود',en:'chest supported row machine',m:'الظهر',fig:'csrow',hl:['t'],
+ cues:['صدرك ملزوق بالمسند','اسحب بالكوع لورا، مو بالإيد','اعصر ظهرك ثانية','رجّع ببطء'],
+ alts:['تجديف بار','تجديف دمبل بإيد وحدة']},
+dbpress:{n:'ضغط كتف دمبل جالس',en:'seated dumbbell shoulder press',m:'الكتف',fig:'dbpress',hl:['sd'],
+ cues:['ظهرك ملزوق بالمسند','نزّل الدمبل لمستوى الإذن','ادفع لفوك','لا تقوّس أسفل ظهرك'],
+ alts:['شولدر بريس جهاز','ضغط سميث جالس']},
+pulldown:{n:'سحب أمامي',en:'lat pulldown',m:'عرض الظهر',fig:'pulldown',hl:['t'],
+ cues:['ثبّت فخذك تحت المسند','ميّل لورا شوية','اسحب البار لأعلى صدرك','رجّعه لفوك ببطء'],
+ alts:['عقلة','سحب أمامي بقبضة ضيقة']},
+latraise:{n:'رفرفة جانبي',en:'dumbbell lateral raise',m:'الكتف الجانبي',fig:'latraise',hl:['sd'],
+ cues:['الكوع مثني خفيف','ارفع لمستوى الكتف بس','لا تتأرجح','نزّل ببطء'],
+ alts:['رفرفة جانبي كيبل','رفرفة جانبي جهاز']},
+ohtri_cable:{n:'ترايسبس فوك الراس كيبل',en:'overhead cable triceps extension',m:'الترايسبس',fig:'ohtri_cable',hl:['ua'],
+ cues:['اعطي ظهرك للكيبل وخطوة لكدام','الكوع ثابت جنب راسك','انزل لحد ما تحس تمدد','مدّ إيدك لفوك وكدام'],
+ alts:['ترايسبس فوك الراس دمبل','سكل كرشر']},
+preacher:{n:'بريتشر كيرل',en:'preacher curl',m:'البايسبس',fig:'preacher',hl:['ua'],
+ cues:['ابطك على حافة المسند','انزل لحد ما إيدك تقرب تستقيم','ارفع والكوع ثابت','نزّل ببطء'],
+ alts:['بريتشر جهاز','كيرل بار EZ واقف']},
+shrug:{n:'شرك دمبل',en:'dumbbell shrug',m:'الترابيس',fig:'shrug',hl:['tr','sd'],
+ cues:['وكف مستقيم','ارفع أكتافك لإذانك','وكف ثانية فوك','نزّل لآخر الحركة'],
+ alts:['شرك بار','شرك سميث']},
+squat:{n:'سكوات بار',en:'barbell back squat',m:'الفخذ والمؤخرة',fig:'squat',hl:['th','hip'],
+ cues:['البار على أعلى ظهرك','رجلك بعرض كتفك','انزل عميق وظهرك مستقيم','الركبة باتجاه أصابعك'],
+ alts:['هاك سكوات','سكوات سميث','ليك بريس']},
+rdl:{n:'رومانيان ديدلفت',en:'romanian deadlift',m:'الفخذ الخلفي',fig:'rdl',hl:['th','hip'],
+ cues:['الركبة مثنية شوية وثابتة','ادفع وركك لورا','البار قريب من رجلك','ظهرك مستقيم دائماً'],
+ alts:['رومانيان دمبل','باك إكستنشن 45°']},
+legpress:{n:'ليك بريس',en:'45 degree leg press',m:'الفخذ',fig:'legpress',hl:['th'],
+ cues:['ظهرك ملزوق بالمسند','رجلك بنص البلاطة','انزل عميق','لا تقفل ركبتك فوك'],
+ alts:['هاك سكوات','سكوات سميث']},
+seatcurl:{n:'ليك كيرل جالس',en:'seated leg curl',m:'الفخذ الخلفي',fig:'seatcurl',hl:['th'],
+ cues:['ركبتك على محور الجهاز','ثبّت فخذك بالمسند','اسحب لتحت لآخرها','رجّع ببطء'],
+ alts:['ليك كيرل منبطح']},
+calfstand:{n:'سمانة واقف',en:'standing calf raise',m:'السمانة',fig:'calfstand',hl:['sh'],
+ cues:['أصابعك على حافة البلوك','انزل لآخر نقطة ووكف ثانية','ارتفع لأعلى نقطة','لا تنطّط'],
+ alts:['سمانة على الليك بريس','سمانة سميث']},
+cablecrunch:{n:'كرنج كيبل',en:'cable crunch',m:'البطن',fig:'cablecrunch',hl:['t'],
+ cues:['اكعد على ركبك والحبل جنب راسك','الورك ثابت','لفّ ظهرك وقرّب صدرك لوركك','رجّع ببطء'],
+ alts:['كرنج جهاز','كرنج بالأرض']},
+inclinedb:{n:'إنكلاين دمبل بريس',en:'incline dumbbell press',m:'الصدر العلوي',fig:'inclinedb',hl:['t'],
+ cues:['البنج على 30°','أكتافك لورا','نزّل الدمبل لجوانب صدرك','ادفع لفوك'],
+ alts:['إنكلاين بار','إنكلاين جهاز']},
+pullup:{n:'عقلة',en:'pull up',m:'عرض الظهر',fig:'pullup',hl:['t'],
+ cues:['قبضة أعرض من كتفك شوية','ابدي وإيدك مستقيمة','اسحب صدرك للبار','نزّل ببطء'],
+ alts:['سحب أمامي','عقلة بمساعدة جهاز']},
+cablerow:{n:'تجديف كيبل جالس',en:'seated cable row',m:'الظهر',fig:'cablerow',hl:['t'],
+ cues:['ظهرك مستقيم','مدّ لكدام لحد ما تحس تمدد','اسحب لبطنك بالكوع','لا تتأرجح'],
+ alts:['تجديف صدر مسنود','تجديف دمبل']},
+cablefly:{n:'فلاي كيبل',en:'cable chest fly',m:'الصدر',fig:'cablefly',hl:['t'],
+ cues:['الكوع مثني خفيف وثابت','افتح لحد ما تحس تمدد','اجمع إيدك قدامك','رجّع ببطء'],
+ alts:['بك دك (Pec deck)','فلاي دمبل']},
+facepull:{n:'فيس بول',en:'face pull',m:'الكتف الخلفي',fig:'facepull',hl:['sd'],
+ cues:['الكيبل بمستوى وجهك','اسحب الحبل لوجهك','الكوع عالي','رجّع ببطء'],
+ alts:['رفرفة خلفي جهاز','رفرفة خلفي دمبل']},
+inclinecurl:{n:'إنكلاين دمبل كيرل',en:'incline dumbbell curl',m:'البايسبس',fig:'inclinecurl',hl:['ua'],
+ cues:['البنج على 45-60°','إيدك معلّقة لتحت','ارفع والكوع ثابت','نزّل ببطء'],
+ alts:['كيرل دمبل واقف','كيرل كيبل']},
+ohtri_db:{n:'ترايسبس فوك الراس دمبل',en:'seated overhead dumbbell triceps extension',m:'الترايسبس',fig:'ohtri_db',hl:['ua'],
+ cues:['امسك دمبل وحد بالإيدين','الكوع يأشّر لفوك','نزّل الدمبل ورا راسك','مدّ لفوك'],
+ alts:['فوك الراس كيبل','سكل كرشر']},
+hammer:{n:'هامر كيرل',en:'hammer curl',m:'الساعد والبايسبس',fig:'hammer',hl:['fa'],
+ cues:['الإبهام لفوك','الكوع جنب جسمك','ارفع لمستوى الكتف','نزّل ببطء'],
+ alts:['هامر كيبل بالحبل']},
+hack:{n:'هاك سكوات',en:'hack squat',m:'الفخذ',fig:'hack',hl:['th'],
+ cues:['ظهرك ملزوق بالمسند','رجلك بنص البلاطة','انزل عميق','لا تقفل ركبتك فوك'],
+ alts:['ليك بريس','سكوات سميث']},
+bulgarian:{n:'بلغاري سبليت سكوات',en:'bulgarian split squat',m:'الفخذ والمؤخرة',fig:'bulgarian',hl:['th','hip'],
+ cues:['رجلك الخلفية فوك البنج','خطوة لكدام كافية','انزل لحد ما ركبتك الخلفية تقرب للأرض','العدّات لكل رجل'],
+ alts:['لنجز مشي']},
+legext:{n:'ليك إكستنشن',en:'leg extension',m:'الفخذ الأمامي',fig:'legext',hl:['th'],
+ cues:['ميّل ظهرك لورا','ركبتك على محور الجهاز','مدّ رجلك لآخرها','نزّل ببطء'],
+ alts:['ليك إكستنشن رجل وحدة']},
+hipthrust:{n:'هب ثرست',en:'barbell hip thrust',m:'المؤخرة',fig:'hipthrust',hl:['hip'],
+ cues:['أعلى ظهرك على البنج','ارفع وركك','اعصر مؤخرتك ثانية','لا تقوّس ظهرك'],
+ alts:['هب ثرست جهاز','Glute bridge']},
+calfpress:{n:'سمانة على الليك بريس',en:'leg press calf raise',m:'السمانة',fig:'calfpress',hl:['sh'],
+ cues:['رجلك مستقيمة','أطراف أصابعك على الحافة','خلي كعبك ينزل لآخره','ادفع لأعلى نقطة'],
+ alts:['سمانة واقف']},
+legraise:{n:'رفع رجلين معلّق',en:'hanging knee raise',m:'البطن',fig:'legraise',hl:['t'],
+ cues:['تعلّق بدون تأرجح','ارفع ركبتك لصدرك','نزّل ببطء','إذا صعبة، اثني ركبتك'],
+ alts:['رفع رجلين بالأرض']}
+};
+const WK = {
+UA:{n:'علوي',ord:'الأول',sub:'صدر · ظهر · كتف · ذراع',slots:[
+ {ex:'bench',s:3,r:'6-8',rest:'3 د'},{ex:'csrow',s:3,r:'8-10',rest:'2:30'},{ex:'dbpress',s:3,r:'8-10',rest:'2 د'},{ex:'pulldown',s:3,r:'10-12',rest:'2 د'},
+ {ex:'latraise',s:3,r:'12-15',rest:'1:30'},{ex:'ohtri_cable',s:3,r:'10-12',rest:'1:30'},{ex:'preacher',s:3,r:'10-12',rest:'1:30'},{ex:'shrug',s:2,r:'12-15',rest:'1 د',opt:1}]},
+LA:{n:'سفلي',ord:'الثاني',sub:'فخذ · مؤخرة · سمانة · بطن',slots:[
+ {ex:'squat',s:3,r:'6-8',rest:'3 د'},{ex:'rdl',s:3,r:'8-10',rest:'2:30'},{ex:'legpress',s:3,r:'10-12',rest:'2 د'},{ex:'seatcurl',s:3,r:'10-12',rest:'1:30'},
+ {ex:'calfstand',s:4,r:'10-15',rest:'1:30'},{ex:'cablecrunch',s:3,r:'10-15',rest:'1:15'}]},
+UB:{n:'علوي',ord:'الثالث',sub:'صدر علوي · ظهر · كتف · ذراع',slots:[
+ {ex:'inclinedb',s:3,r:'8-12',rest:'2:30'},{ex:'pullup',s:3,r:'8-12',rest:'2:30'},{ex:'cablerow',s:3,r:'10-12',rest:'2 د'},{ex:'cablefly',s:3,r:'12-15',rest:'1:30'},
+ {ex:'latraise',s:3,r:'12-20',rest:'1:30'},{ex:'facepull',s:3,r:'12-15',rest:'1:15'},{ex:'inclinecurl',s:3,r:'10-12',rest:'1:30'},{ex:'ohtri_db',s:3,r:'10-12',rest:'1:30'},{ex:'hammer',s:2,r:'10-12',rest:'1 د',opt:1}]},
+LB:{n:'سفلي',ord:'الرابع',sub:'فخذ · مؤخرة · سمانة · بطن',slots:[
+ {ex:'hack',s:3,r:'8-12',rest:'3 د'},{ex:'bulgarian',s:3,r:'8-10',rest:'2 د'},{ex:'legext',s:3,r:'12-15',rest:'1:30'},{ex:'seatcurl',s:3,r:'12-15',rest:'1:30'},
+ {ex:'hipthrust',s:3,r:'10-12',rest:'2 د',opt:1},{ex:'calfpress',s:4,r:'12-20',rest:'1:30'},{ex:'legraise',s:3,r:'10-15',rest:'1:15'}]}
+};
+const ORDER = ['UA','LA','UB','LB'];
+
+/* ---------- drawings: a tiny side-view / front-view rig ---------- */
+const FIG = {
+ bench:{props:[{r:[58,117,112,7]},{l:[72,124,72,162,4]},{l:[156,124,156,162,4]}],dyn:[{k:'plate',at:'W',r:15,front:1}],
+  k:[{an:'P',at:[150,110],t:180,hd:180,th:15,sh:100,ft:0,ua:-88,fa:-90},{an:'P',at:[150,110],t:180,hd:180,th:15,sh:100,ft:0,ua:-220,fa:-60}]},
+ csrow:{props:[{r:[78,126,50,6]},{l:[103,132,103,162,4]},{r:[116,68,8,38,3]},{r:[176,22,8,141,2]}],dyn:[{k:'lever',from:[180,40],to:'W'},{k:'handle',at:'W',front:1}],
+  k:[{an:'P',at:[100,120],t:-82,th:0,sh:95,ft:0,ua:-5,fa:0},{an:'P',at:[100,120],t:-82,th:0,sh:95,ft:0,ua:172,fa:0}]},
+ dbpress:{props:[{r:[74,128,52,6]},{r:[82,58,7,70,2]},{l:[100,134,100,162,4]}],dyn:[{k:'db',at:'W',front:1}],
+  k:[{an:'P',at:[100,122],t:-90,th:0,sh:92,ft:0,ua:20,uas:.35,fa:-90},{an:'P',at:[100,122],t:-90,th:0,sh:92,ft:0,ua:-88,uas:1,fa:-89}]},
+ pulldown:{props:[{r:[88,128,46,6]},{l:[110,134,110,162,4]},{c:[150,109,6]},{r:[186,4,8,159,2]},{c:[112,8,5]},{l:[112,8,190,8,1.6,'cable']}],dyn:[{k:'cable',from:[112,8],to:'W'},{k:'bar',at:'W',front:1}],
+  k:[{an:'P',at:[110,122],t:-100,th:0,sh:92,ft:0,ua:-80,uas:1,fa:-80},{an:'P',at:[110,122],t:-100,th:0,sh:92,ft:0,ua:10,uas:.12,fa:-88},{an:'P',at:[110,122],t:-100,th:0,sh:92,ft:0,ua:100,uas:1,fa:-75}]},
+ latraise:{front:1,props:[],dyn:[{k:'db',at:'WR',front:1},{k:'db',at:'WL',front:1}],
+  k:[{cx:120,py:82,ua:82,fa:84,th:86,sh:90},{cx:120,py:82,ua:-4,fa:2,th:86,sh:90}]},
+ ohtri_cable:{props:[{r:[24,10,8,153,2]},{c:[36,20,5]}],dyn:[{k:'cable',from:[36,20],to:'W'},{k:'handle',at:'W',front:1}],
+  k:[{an:'A',at:[120,160],t:-55,th:70,sh:95,ft:0,th2:110,sh2:92,ft2:0,ua:-35,fa:150},{an:'A',at:[120,160],t:-55,th:70,sh:95,ft:0,th2:110,sh2:92,ft2:0,ua:-35,fa:330}]},
+ preacher:{props:[{r:[70,128,40,6]},{l:[90,134,90,162,4]},{l:[95,80,122,102.7,7,'padl']},{l:[116,104,116,114,4]}],dyn:[{k:'plate',at:'W',r:8,front:1}],
+  k:[{an:'P',at:[90,122],t:-80,th:0,sh:95,ft:0,ua:40,fa:60},{an:'P',at:[90,122],t:-80,th:0,sh:95,ft:0,ua:40,fa:-80}]},
+ shrug:{front:1,props:[],dyn:[{k:'db',at:'WR',front:1},{k:'db',at:'WL',front:1}],
+  k:[{cx:120,py:82,ua:86,fa:88,th:86,sh:90,sy:0},{cx:120,py:82,ua:86,fa:88,th:86,sh:90,sy:-8}]},
+ squat:{props:[{l:[62,24,62,162,3]},{l:[172,24,172,162,3]}],dyn:[{k:'plate',at:'S',dx:-2,dy:3,r:17,front:1}],
+  k:[{an:'A',at:[112,160],t:-90,hd:-90,th:90,sh:90,ft:0,ua:140,fa:-20},{an:'A',at:[112,160],t:-50,hd:-35,th:-10,sh:115,ft:0,ua:140,fa:-20}]},
+ rdl:{props:[],dyn:[{k:'plate',at:'W',r:15,front:1}],
+  k:[{an:'A',at:[110,160],t:-90,hd:-90,th:90,sh:90,ft:0,ua:92,fa:92},{an:'A',at:[110,160],t:-15,hd:0,th:45,sh:92,ft:0,ua:100,fa:100}]},
+ legpress:{props:[{l:[41,92,84,134,8,'padl']},{l:[80,137,108,137,6,'padl']},{l:[110,140,205,45,4]},{l:[96,140,96,162,4]}],dyn:[{k:'jseg',at:'A',x1:-5.5,y1:-11.5,x2:11.5,y2:5.5,w:6,front:1}],
+  k:[{an:'P',at:[90,128],t:-135,hd:-110,th:-40,sh:-40,ft:-135,ua:60,fa:10},{an:'P',at:[90,128],t:-135,hd:-110,th:-80,sh:6.6,ft:-135,ua:60,fa:10}]},
+ seatcurl:{props:[{r:[70,124,64,6]},{l:[78,64,86,116,7,'padl']},{r:[56,40,7,123,2]},{l:[100,130,100,162,4]}],dyn:[{k:'padOn',seg:['P','K'],t:.82,off:-10,r:6},{k:'padOn',seg:['K','A'],t:.88,off:9,r:6,lever:1}],
+  k:[{an:'P',at:[95,118],t:-100,th:0,sh:10,ft:-80,ua:80,fa:20},{an:'P',at:[95,118],t:-100,th:0,sh:110,ft:20,ua:80,fa:20}]},
+ calfstand:{vb:'0 -18 240 188',props:[{r:[130,150,40,13,2]},{r:[55,14,7,149,2]}],dyn:[{k:'hline',at:'S',dx:-8,dy:-2,x2:61},{k:'pad',at:'S',dx:-4,dy:-3,r:6}],
+  k:[{an:'T',at:[136,150],t:-90,hd:-90,th:90,sh:90,ft:-25,ua:110,fa:-60},{an:'T',at:[136,150],t:-90,hd:-90,th:90,sh:90,ft:45,ua:110,fa:-60}]},
+ cablecrunch:{props:[{r:[208,6,8,157,2]},{c:[204,14,5]}],dyn:[{k:'cable',from:[204,14],to:'W'},{k:'handle',at:'W',front:1}],
+  k:[{an:'K',at:[110,158],t:-80,hd:-80,th:90,sh:180,ft:180,ua:30,fa:-100},{an:'K',at:[110,158],t:-20,hd:30,th:75,sh:180,ft:180,ua:60,fa:-60}]},
+ inclinedb:{props:[{l:[82,92,136,123,7,'padl']},{l:[136,124,162,124,7,'padl']},{l:[104,106,104,162,4]},{l:[150,128,150,162,4]}],dyn:[{k:'db',at:'W',front:1}],
+  k:[{an:'P',at:[140,115],t:-150,hd:-160,th:10,sh:95,ft:0,ua:-85,fa:-85},{an:'P',at:[140,115],t:-150,hd:-160,th:10,sh:95,ft:0,ua:-230,fa:-60}]},
+ pullup:{floor:0,vb:'0 -22 240 220',props:[{l:[40,8,190,8,5]},{l:[40,8,40,196,4]},{l:[190,8,190,196,4]}],dyn:[],
+  k:[{an:'W',at:[112,8],t:-90,hd:-90,th:100,sh:130,ft:40,ua:-90,fa:-90},{an:'W',at:[112,8],t:-92,hd:-92,th:100,sh:130,ft:40,ua:40,fa:-120}]},
+ cablerow:{props:[{r:[40,146,70,6]},{l:[52,152,52,162,4]},{l:[100,152,100,162,4]},{r:[162,118,7,40,2]},{r:[188,60,8,103,2]},{c:[184,104,5]}],dyn:[{k:'cable',from:[184,104],to:'W'},{k:'handle',at:'W',front:1}],
+  k:[{an:'P',at:[80,140],t:-60,hd:-50,th:-10,sh:15,ft:-80,ua:10,fa:5},{an:'P',at:[80,140],t:-95,hd:-90,th:-10,sh:15,ft:-80,ua:150,fa:5}]},
+ cablefly:{front:1,props:[{r:[4,0,8,163,2]},{r:[228,0,8,163,2]},{c:[16,8,5]},{c:[224,8,5]}],dyn:[{k:'cable',from:[16,8],to:'WL'},{k:'cable',from:[224,8],to:'WR'},{k:'handle',at:'WR',front:1},{k:'handle',at:'WL',front:1}],
+  k:[{cx:120,py:82,ua:-20,fa:-15,th:86,sh:90,als:1},{cx:120,py:82,ua:110,fa:150,als:.55,th:86,sh:90}]},
+ facepull:{props:[{r:[208,6,8,157,2]},{c:[204,24,5]}],dyn:[{k:'cable',from:[204,24],to:'W'},{k:'handle',at:'W',front:1}],
+  k:[{an:'A',at:[112,160],t:-85,hd:-85,th:80,sh:95,ft:0,th2:105,sh2:88,ft2:0,ua:-10,uas:1,fa:-5,fas:1},
+     {an:'A',at:[112,160],t:-85,hd:-85,th:80,sh:95,ft:0,th2:105,sh2:88,ft2:0,ua:-80,uas:.3,fa:-60,fas:.8},
+     {an:'A',at:[112,160],t:-85,hd:-85,th:80,sh:95,ft:0,th2:105,sh2:88,ft2:0,ua:-185,uas:.6,fa:-55,fas:.6}]},
+ inclinecurl:{props:[{l:[91,67,122,120,7,'padl']},{l:[122,123,150,123,7,'padl']},{l:[112,104,112,162,4]},{l:[146,127,146,162,4]}],dyn:[{k:'db',at:'W',front:1}],
+  k:[{an:'P',at:[130,116],t:-120,hd:-115,th:10,sh:95,ft:0,ua:95,fa:95},{an:'P',at:[130,116],t:-120,hd:-115,th:10,sh:95,ft:0,ua:95,fa:-60}]},
+ ohtri_db:{props:[{r:[74,128,52,6]},{r:[82,76,7,52,2]},{l:[100,134,100,162,4]}],dyn:[{k:'db',at:'W',r:8,front:1}],
+  k:[{an:'P',at:[100,122],t:-90,hd:-90,th:0,sh:92,ft:0,ua:-80,fa:110},{an:'P',at:[100,122],t:-90,hd:-90,th:0,sh:92,ft:0,ua:-80,fa:275}]},
+ hammer:{props:[],dyn:[{k:'dbl',front:1}],
+  k:[{an:'A',at:[112,160],t:-90,hd:-90,th:90,sh:90,ft:0,ua:95,fa:95},{an:'A',at:[112,160],t:-90,hd:-90,th:90,sh:90,ft:0,ua:95,fa:-70}]},
+ hack:{props:[{l:[82,30,142,156,3]},{l:[140,166,192,152,5]}],dyn:[{k:'back',seg:['P','S'],off:-9,e0:4,e1:10,w:8},{k:'pad',at:'S',dx:3,dy:-6,r:6}],
+  k:[{an:'A',at:[155,158],t:-115,hd:-95,th:60,sh:75,ft:-15,ua:110,fa:-50},{an:'A',at:[155,158],t:-115,hd:-95,th:15.1,sh:127.6,ft:-15,ua:110,fa:-50}]},
+ bulgarian:{props:[{r:[26,119,50,6]},{l:[32,125,32,162,4]},{l:[70,125,70,162,4]}],dyn:[{k:'db',at:'W',front:1}],
+  k:[{an:'A',at:[125,160],t:-85,hd:-85,th:80,sh:92,ft:0,ik2:{t:[62,115]},ft2:180,ua:92,fa:90},{an:'A',at:[125,160],t:-75,hd:-75,th:5,sh:110,ft:0,ik2:{t:[62,115]},ft2:180,ua:95,fa:90}]},
+ legext:{props:[{r:[78,124,62,6]},{l:[62,70,92,122,7,'padl']},{l:[110,130,110,162,4]}],dyn:[{k:'padOn',seg:['K','A'],t:.88,off:-9,r:6,lever:1}],
+  k:[{an:'P',at:[100,118],t:-120,hd:-110,th:0,sh:92,ft:5,ua:70,fa:20},{an:'P',at:[100,118],t:-120,hd:-110,th:0,sh:-8,ft:-80,ua:70,fa:20}]},
+ hipthrust:{props:[{r:[10,128,52,7]},{l:[18,135,18,162,4]},{l:[54,135,54,162,4]}],dyn:[{k:'plate',at:'P',dx:4,dy:-14,r:15,front:1}],
+  k:[{an:'S',at:[60,122],t:-145,hd:-170,ik:{t:[150,160],up:1},ft:0,ua:30,fa:-10},{an:'S',at:[60,122],t:-180,hd:-175,ik:{t:[150,160],up:1},ft:0,ua:0,fa:-10}]},
+ calfpress:{props:[{l:[41,92,84,134,8,'padl']},{l:[80,137,108,137,6,'padl']},{l:[110,140,205,45,4]},{l:[96,140,96,162,4]}],dyn:[{k:'jseg',at:'T',x1:-5.5,y1:-11.5,x2:11.5,y2:5.5,w:6,front:1}],
+  k:[{an:'P',at:[90,128],t:-135,hd:-110,th:-40,sh:-40,ft:-160,ua:60,fa:10},{an:'P',at:[90,128],t:-135,hd:-110,th:-40,sh:-40,ft:-100,ua:60,fa:10}]},
+ legraise:{floor:0,vb:'0 -22 240 220',props:[{l:[40,8,190,8,5]},{l:[40,8,40,196,4]},{l:[190,8,190,196,4]}],dyn:[],
+  k:[{an:'W',at:[112,8],t:-90,hd:-90,th:92,sh:92,ft:20,ua:-90,fa:-90},{an:'W',at:[112,8],t:-96,hd:-90,th:-25,sh:70,ft:-10,ua:-90,fa:-90}]}
+};
+for (const id in EX) if (FIG[EX[id].fig]) FIG[EX[id].fig].hl = EX[id].hl || [];
+
+const LEN = {t:50, ua:27, fa:25, th:40, sh:38, ft:13, hd:15};
+const D2R = Math.PI / 180;
+const dv = (a, l) => [Math.cos(a * D2R) * l, Math.sin(a * D2R) * l];
+const ad = (p, q) => [p[0] + q[0], p[1] + q[1]];
+function ik(P, T, a, b, up) {
+  const dx = T[0] - P[0], dy = T[1] - P[1];
+  const d = Math.hypot(dx, dy) || 0.001;
+  const dc = Math.min(Math.max(d, Math.abs(a - b) + 0.01), a + b - 0.01);
+  const base = Math.atan2(dy, dx);
+  const al = Math.acos(Math.min(1, Math.max(-1, (a * a + dc * dc - b * b) / (2 * a * dc))));
+  const k1 = [P[0] + a * Math.cos(base + al), P[1] + a * Math.sin(base + al)];
+  const k2 = [P[0] + a * Math.cos(base - al), P[1] + a * Math.sin(base - al)];
+  const K = up ? (k1[1] < k2[1] ? k1 : k2) : (k1[1] > k2[1] ? k1 : k2);
+  const kx = T[0] - K[0], ky = T[1] - K[1], kl = Math.hypot(kx, ky) || 1;
+  return [K, [K[0] + kx / kl * b, K[1] + ky / kl * b]];
+}
+function armScale(p) { const als = p.als != null ? p.als : 1; return [p.uas != null ? p.uas : als, p.fas != null ? p.fas : als]; }
+function solveSide(p) {
+  const J = {P:[0,0]};
+  J.S = dv(p.t, LEN.t);
+  J.H = ad(J.S, dv(p.hd != null ? p.hd : p.t, LEN.hd));
+  const sc = armScale(p);
+  J.E = ad(J.S, dv(p.ua, LEN.ua * sc[0]));
+  J.W = ad(J.E, dv(p.fa, LEN.fa * sc[1]));
+  if (p.th != null) { J.K = dv(p.th, LEN.th); J.A = ad(J.K, dv(p.sh, LEN.sh)); J.T = ad(J.A, dv(p.ft || 0, LEN.ft)); }
+  if (p.th2 != null) { J.K2 = dv(p.th2, LEN.th); J.A2 = ad(J.K2, dv(p.sh2, LEN.sh)); J.T2 = ad(J.A2, dv(p.ft2 || 0, LEN.ft)); }
+  const an = J[p.an || 'P'];
+  const off = [p.at[0] - an[0], p.at[1] - an[1]];
+  for (const k in J) J[k] = ad(J[k], off);
+  if (p.ik) { const r = ik(J.P, p.ik.t, LEN.th, LEN.sh, !!p.ik.up); J.K = r[0]; J.A = r[1]; J.T = ad(J.A, dv(p.ft || 0, LEN.ft)); }
+  if (p.ik2) { const r = ik(J.P, p.ik2.t, LEN.th, LEN.sh, !!p.ik2.up); J.K2 = r[0]; J.A2 = r[1]; J.T2 = ad(J.A2, dv(p.ft2 || 0, LEN.ft)); }
+  return J;
+}
+function solveFront(p) {
+  const cx = p.cx, py = p.py, top = py - 50 + (p.sy || 0), J = {};
+  J.SR = [cx + 17, top]; J.SL = [cx - 17, top]; J.N = [cx, top]; J.NH = [cx, py - 57]; J.H = [cx, py - 66];
+  J.PR = [cx + 9, py]; J.PL = [cx - 9, py];
+  const sc = armScale(p);
+  J.ER = ad(J.SR, dv(p.ua, LEN.ua * sc[0])); J.WR = ad(J.ER, dv(p.fa, LEN.fa * sc[1]));
+  J.EL = ad(J.SL, dv(180 - p.ua, LEN.ua * sc[0])); J.WL = ad(J.EL, dv(180 - p.fa, LEN.fa * sc[1]));
+  const th = p.th != null ? p.th : 88, sh = p.sh != null ? p.sh : 90;
+  J.KR = ad(J.PR, dv(th, LEN.th)); J.AR = ad(J.KR, dv(sh, LEN.sh));
+  J.KL = ad(J.PL, dv(180 - th, LEN.th)); J.AL = ad(J.KL, dv(180 - sh, LEN.sh));
+  return J;
+}
+function lerpPose(a, b, u) {
+  const o = {};
+  new Set(Object.keys(a).concat(Object.keys(b))).forEach(k => {
+    const va = a[k], vb = b[k];
+    if (k === 'an') { o.an = va || vb; return; }
+    if (k === 'ik' || k === 'ik2') { const A = va || vb, B = vb || va; o[k] = {t:[A.t[0] + (B.t[0] - A.t[0]) * u, A.t[1] + (B.t[1] - A.t[1]) * u], up:A.up}; return; }
+    if (Array.isArray(va) || Array.isArray(vb)) { const A = va || vb, B = vb || va; o[k] = [A[0] + (B[0] - A[0]) * u, A[1] + (B[1] - A[1]) * u]; return; }
+    const A = va != null ? va : vb, B = vb != null ? vb : va;
+    o[k] = A + (B - A) * u;
+  });
+  return o;
+}
+function poseAt(fig, u) {
+  const k = fig.k;
+  if (k.length < 3) return lerpPose(k[0], k[k.length - 1], u);
+  return u < 0.5 ? lerpPose(k[0], k[1], u * 2) : lerpPose(k[1], k[2], (u - 0.5) * 2);
+}
+const LN = (c, p, q, w) => ({t:'line', c, x1:p[0], y1:p[1], x2:q[0], y2:q[1], w});
+const CI = (c, p, r) => ({t:'circle', c, cx:p[0], cy:p[1], r});
+function bodySide(J, g, hl) {
+  const has = k => hl.includes(k), fg = g ? 'gh' : 'fg', far = g ? 'gh' : 'far', hf = g ? 'ghf' : 'fgf';
+  const c = k => (!g && has(k)) ? 'hl' : fg, cf = g ? 'ghf' : 'hlf', o = [];
+  if (J.K2) o.push(LN(far, J.P, J.K2, 12), LN(far, J.K2, J.A2, 10), LN(far, J.A2, J.T2, 6));
+  if (J.K) o.push(LN(c('th'), J.P, J.K, 12), LN(c('sh'), J.K, J.A, 10), LN(fg, J.A, J.T, 6));
+  o.push(LN(c('t'), J.P, J.S, 15));
+  if (has('hip')) o.push(CI(cf, J.P, 9.5));
+  o.push(CI(hf, J.H, 10));
+  if (has('sd')) o.push(CI(cf, J.S, 8));
+  o.push(LN(c('ua'), J.S, J.E, 9), LN(c('fa'), J.E, J.W, 8));
+  return o;
+}
+function bodyFront(J, g, hl) {
+  const has = k => hl.includes(k), fg = g ? 'gh' : 'fg', hf = g ? 'ghf' : 'fgf', cf = g ? 'ghf' : 'hlf';
+  const c = k => (!g && has(k)) ? 'hl' : fg, o = [];
+  o.push(LN(fg, J.PL, J.KL, 11), LN(fg, J.KL, J.AL, 9), LN(fg, J.AL, ad(J.AL, [-7, 1]), 6));
+  o.push(LN(fg, J.PR, J.KR, 11), LN(fg, J.KR, J.AR, 9), LN(fg, J.AR, ad(J.AR, [7, 1]), 6));
+  o.push({t:'poly', c:(!g && has('t')) ? 'hlf' : hf, pts:[[J.SL[0] - 4, J.SL[1] - 3], [J.SR[0] + 4, J.SR[1] - 3], [J.PR[0] + 5, J.PR[1] + 4], [J.PL[0] - 5, J.PL[1] + 4]]});
+  o.push(LN(c('tr'), J.N, J.NH, has('tr') ? 10 : 7), CI(hf, J.H, 10));
+  if (has('sd')) o.push(CI(cf, J.SL, 8), CI(cf, J.SR, 8));
+  o.push(LN(c('ua'), J.SL, J.EL, 9), LN(fg, J.EL, J.WL, 8), LN(c('ua'), J.SR, J.ER, 9), LN(fg, J.ER, J.WR, 8));
+  return o;
+}
+function jp(J, at, dx, dy) { const p = Array.isArray(at) ? at : J[at]; return [p[0] + (dx || 0), p[1] + (dy || 0)]; }
+function dynSpecs(pr, J) {
+  switch (pr.k) {
+    case 'plate': { const c = jp(J, pr.at, pr.dx, pr.dy), r = pr.r || 15; return [CI('wt', c, r), CI('hub', c, Math.max(2.5, r * 0.28))]; }
+    case 'db': { const c = jp(J, pr.at, pr.dx, pr.dy); return [CI('wt', c, pr.r || 7), CI('hub', c, 2.4)]; }
+    case 'dbl': { const W = J.W, E = J.E, dx = W[0] - E[0], dy = W[1] - E[1], l = Math.hypot(dx, dy) || 1, n = [-dy / l * 10, dx / l * 10]; return [LN('wtl', [W[0] - n[0], W[1] - n[1]], [W[0] + n[0], W[1] + n[1]], 7)]; }
+    case 'bar': { const c = jp(J, pr.at); return [LN('wtl', [c[0] - 13, c[1]], [c[0] + 13, c[1]], 4)]; }
+    case 'handle': return [CI('hdl', jp(J, pr.at), 3.6)];
+    case 'cable': return [LN('cable', jp(J, pr.from), jp(J, pr.to), 1.6)];
+    case 'lever': return [LN('prop', jp(J, pr.from), jp(J, pr.to), 5)];
+    case 'pad': return [CI('pad', jp(J, pr.at, pr.dx, pr.dy), pr.r || 6)];
+    case 'padOn': {
+      const a = J[pr.seg[0]], b = J[pr.seg[1]], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, n = [-dy / l, dx / l];
+      const c = [a[0] + dx * pr.t + n[0] * pr.off, a[1] + dy * pr.t + n[1] * pr.off], o = [];
+      if (pr.lever) o.push(LN('prop', a, c, 4));
+      o.push(CI('pad', c, pr.r || 6));
+      return o;
+    }
+    case 'back': {
+      const a = J[pr.seg[0]], b = J[pr.seg[1]], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, u = [dx / l, dy / l], n = [-u[1], u[0]];
+      const p1 = [a[0] + n[0] * pr.off - u[0] * (pr.e0 || 0), a[1] + n[1] * pr.off - u[1] * (pr.e0 || 0)];
+      const p2 = [b[0] + n[0] * pr.off + u[0] * (pr.e1 || 0), b[1] + n[1] * pr.off + u[1] * (pr.e1 || 0)];
+      return [LN('padl', p1, p2, pr.w || 8)];
+    }
+    case 'jseg': { const c = J[pr.at]; return [LN(pr.c || 'wtl', [c[0] + pr.x1, c[1] + pr.y1], [c[0] + pr.x2, c[1] + pr.y2], pr.w || 6)]; }
+    case 'hline': { const c = jp(J, pr.at, pr.dx, pr.dy); return [LN('prop', c, [pr.x2, c[1]], 4)]; }
+  }
+  return [];
+}
+function staticSpecs(fig) {
+  const o = [];
+  if (fig.floor !== 0) o.push(LN('floor', [6, 163.5], [234, 163.5], 2));
+  for (const p of fig.props || []) {
+    if (p.r) o.push({t:'rect', c:'propf', x:p.r[0], y:p.r[1], w:p.r[2], h:p.r[3], rx:p.r[4] != null ? p.r[4] : 2});
+    else if (p.l) o.push(LN(p.l[5] || 'prop', [p.l[0], p.l[1]], [p.l[2], p.l[3]], p.l[4] || 3));
+    else if (p.c) o.push(CI('propf', [p.c[0], p.c[1]], p.c[2]));
+  }
+  return o;
+}
+function dynList(fig, u) {
+  const solve = fig.front ? solveFront : solveSide, body = fig.front ? bodyFront : bodySide, hl = fig.hl || [];
+  const J = solve(poseAt(fig, u)), o = body(solve(fig.k[0]), true, hl);
+  for (const pr of fig.dyn || []) if (!pr.front) o.push(...dynSpecs(pr, J));
+  o.push(...body(J, false, hl));
+  for (const pr of fig.dyn || []) if (pr.front) o.push(...dynSpecs(pr, J));
+  return o;
+}
+const f1 = n => Math.round(n * 10) / 10;
+const ptsStr = pts => pts.map(p => f1(p[0]) + ',' + f1(p[1])).join(' ');
+function specStr(s) {
+  if (s.t === 'line') return `<line class="${s.c}" x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}" stroke-width="${s.w}"/>`;
+  if (s.t === 'circle') return `<circle class="${s.c}" cx="${f1(s.cx)}" cy="${f1(s.cy)}" r="${f1(s.r)}"/>`;
+  if (s.t === 'rect') return `<rect class="${s.c}" x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="${s.rx}"/>`;
+  if (s.t === 'poly') return `<polygon class="${s.c}" points="${ptsStr(s.pts)}"/>`;
+  return '';
+}
+function figSVG(key, u, label) {
+  const fig = FIG[key];
+  if (!fig) return '';
+  return `<svg class="fig" viewBox="${fig.vb || '0 0 240 170'}" role="img" aria-label="${label}" data-fig="${key}"><g>${staticSpecs(fig).map(specStr).join('')}</g><g class="dy">${dynList(fig, u).map(specStr).join('')}</g></svg>`;
+}
+function updateFig(svg, u) {
+  const fig = FIG[svg.dataset.fig], g = svg.querySelector('.dy');
+  if (!fig || !g) return;
+  const list = dynList(fig, u), els = g.children;
+  for (let i = 0; i < list.length && i < els.length; i++) {
+    const s = list[i], el = els[i];
+    if (s.t === 'line') { el.setAttribute('x1', f1(s.x1)); el.setAttribute('y1', f1(s.y1)); el.setAttribute('x2', f1(s.x2)); el.setAttribute('y2', f1(s.y2)); }
+    else if (s.t === 'circle') { el.setAttribute('cx', f1(s.cx)); el.setAttribute('cy', f1(s.cy)); }
+    else if (s.t === 'poly') el.setAttribute('points', ptsStr(s.pts));
+  }
+}
+
+/* ---------- animate only the pictures on screen ---------- */
+const VIS = new Set();
+let raf = null;
+const t0 = performance.now();
+const io = ('IntersectionObserver' in window) ? new IntersectionObserver(ents => {
+  ents.forEach(en => { if (en.isIntersecting) VIS.add(en.target); else VIS.delete(en.target); });
+  kick();
+}, {rootMargin:'60px'}) : null;
+function kick() {
+  if (reduceMotion || raf || !VIS.size) return;
+  let last = 0;
+  const step = now => {
+    if (!VIS.size) { raf = null; return; }
+    if (now - last >= 33) {
+      last = now;
+      const ph = ((now - t0) % 3400) / 3400, u = (1 - Math.cos(ph * 2 * Math.PI)) / 2;
+      VIS.forEach(svg => { if (svg.isConnected) updateFig(svg, u); else VIS.delete(svg); });
+    }
+    raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+}
+
+/* ---------- page ---------- */
+let sel = null;
+const KEY = 'bulk-course.last';
+function lastChoice() { try { const v = localStorage.getItem(KEY); return WK[v] ? v : null; } catch (e) { return null; } }
+function remember(w) { try { localStorage.setItem(KEY, w); } catch (e) {} }
+function renderDays() {
+  qs('#days').innerHTML = ORDER.map(w => `<button class="day ${sel === w ? 'on' : ''}" data-w="${w}" aria-pressed="${sel === w}"><b>التمرين ${WK[w].ord}</b><small>${WK[w].n}</small></button>`).join('');
+}
+function renderWall() {
+  const wk = WK[sel];
+  const sets = wk.slots.filter(s => !s.opt).reduce((n, s) => n + s.s, 0);
+  qs('#head').innerHTML = `<div><h2>التمرين ${wk.ord} · ${wk.n}</h2><p>${wk.sub}</p></div><p>${wk.slots.length} تمارين · ${sets} مجموعة</p>`;
+  if (io) { io.disconnect(); }
+  VIS.clear();
+  qs('#wall').innerHTML = wk.slots.map((sl, i) => {
+    const e = EX[sl.ex];
+    return `<article class="pic"><div class="art">${figSVG(e.fig, reduceMotion ? 1 : 0, 'رسمة ' + e.n)}<span class="badge">${i + 1}</span>${sl.opt ? '<span class="opt">اختياري</span>' : ''}</div>
+      <div class="info"><div><h3>${e.n}</h3><p class="mus">${e.m}</p></div>
+        <div class="nums"><div><b>${sl.s}</b><span>مجاميع</span></div><div><b>${sl.r}</b><span>عدّة</span></div><div><b>${sl.rest}</b><span>راحة</span></div></div>
+        <a class="vid" href="${yt('طريقة ' + e.n + ' الصحيحة')}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>شوف الفيديو</a>
+        <details><summary>الطريقة والبدائل</summary><ol>${e.cues.map(c => `<li>${c}</li>`).join('')}</ol>
+          <p class="alts"><b>إذا الجهاز مشغول:</b> ${e.alts.map(a => `<a href="${yt('طريقة ' + a + ' الصحيحة')}" target="_blank" rel="noopener">${a}</a>`).join(' · ')}</p></details>
+      </div></article>`;
+  }).join('');
+  const figs = qsa('#wall .fig');
+  if (io) figs.forEach(s => io.observe(s));
+  else { figs.forEach(s => VIS.add(s)); kick(); }
+}
+function choose(w) { sel = w; renderDays(); renderWall(); }
+qs('#days').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) { choose(b.dataset.w); remember(b.dataset.w); } });
+
+function start(hot) { choose(hot && WK[hot.sel] ? hot.sel : (lastChoice() || 'UA')); }
+try { if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => ({sel})); } catch (e) {}
+if (window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(start);
+else start((window.claude && window.claude.hot && window.claude.hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
