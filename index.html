@@ -280,6 +280,72 @@ a.go{text-decoration:none}
 .mlegend{display:flex;gap:14px;font-size:12px;color:var(--muted)}
 .mlegend span{display:inline-flex;align-items:center;gap:6px}
 .howto .musmap{margin-top:8px}
+/* camera check v2: two ways in, live meter, rep-by-rep report */
+.copts{display:grid;gap:10px}
+.copt{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--surface-2);display:grid;gap:10px}
+.copt h3{display:flex;align-items:center;gap:8px;font-size:16px}
+.copt h3 .cam{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.copt p{font-size:13.5px;color:var(--muted)}
+.cfile{cursor:pointer}
+#cam .ghost{display:flex;align-items:center;justify-content:center;gap:8px}
+#cam .ghost .cam{width:20px;height:20px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+label.go.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-size:16px}
+label.go.ghost .cam{stroke:var(--accent)}
+.cprog{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;width:100%}
+.cprog i{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit;transition:width .2s}
+.rtop{text-align:center}
+.rsec{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.rgraph{width:100%;height:auto;display:block}
+.rgraph path{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.rgraph rect{opacity:.22}
+.rgraph rect.ok,.rkey i.ok{fill:var(--ok);background:var(--ok)}
+.rgraph rect.bad,.rkey i.bad{fill:var(--cam-bad);background:var(--cam-bad)}
+.rgraph rect.skip,.rkey i.skip{fill:var(--muted);background:var(--muted)}
+.rgraph .tgt{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.rkey{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:8px}
+.rkey span{display:inline-flex;align-items:center;gap:6px}
+.rkey i{width:12px;height:12px;border-radius:3px;display:inline-block;opacity:.55}
+.rkey i.tgt{height:0;border-top:2px dashed var(--accent);opacity:1;border-radius:0}
+.rcards{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.rcard{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
+.rcard.ok{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.rcard.bad{border-color:color-mix(in srgb,var(--cam-bad) 55%,var(--line))}
+.rshot{position:relative;padding:0;border:0;border-radius:10px;overflow:hidden;background:var(--cam-bg);display:block}
+.rshot img{display:block;width:100%;height:auto}
+.rplay{position:absolute;inset-inline-start:6px;bottom:6px;width:30px;height:30px;border-radius:50%;background:var(--cam-glass);display:grid;place-items:center}
+.rplay svg{width:14px;height:14px;fill:var(--cam-ink)}
+.rtxt{min-width:0;display:grid;gap:6px}
+.rhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rhead b{font-family:var(--font-display);font-size:16px}
+.rpill{font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.rpill.ok{background:var(--ok);color:var(--surface)}
+.rpill.bad{background:var(--cam-bad);color:var(--cam-bad-ink)}
+.rpill.skip{background:var(--surface-2);color:var(--muted)}
+.rwhy{font-size:14px;font-weight:600}
+.rstats{margin:0;display:grid;gap:3px}
+.rstats div{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;border-top:1px dashed var(--line);padding-top:3px}
+.rstats dt{color:var(--muted)}
+.rstats dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ract{display:grid;gap:10px}
+.rnone{width:100%;max-width:260px;border-radius:12px;margin:0 auto}
+.cplay{position:fixed;inset:0;z-index:30;background:var(--cam-bg);color:var(--cam-ink)}
+.cpv{position:absolute;inset:0 0 72px}
+.cpv video,.cpv canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.cpcap{position:absolute;left:0;right:0;bottom:0;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));font-size:14.5px;text-align:center}
+.cpcap span{color:var(--cam-muted)}
+.cplay .cbtn{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));inset-inline-start:max(16px,env(safe-area-inset-left,0px))}
+.cmeter{position:absolute;inset-inline-end:max(14px,env(safe-area-inset-right,0px));top:24%;bottom:38%;width:34px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cml{font-size:11px;color:var(--cam-muted);white-space:nowrap}
+.cmt{position:relative;flex:1;width:14px;border-radius:999px;background:var(--cam-glass);box-shadow:inset 0 0 0 1.5px var(--cam-muted);overflow:hidden}
+.cmt i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--cam-line);border-radius:inherit;transition:height .08s linear}
+.cmt b{position:absolute;left:-2px;right:-2px;bottom:87%;height:3px;background:var(--cam-ink)}
+.cmeter.hit .cmt i{background:var(--cam-okline)}
+.cdots{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;min-height:0}
+.cdots i{width:12px;height:12px;border-radius:50%;background:var(--cam-muted)}
+.cdots i.ok{background:var(--cam-okline)}
+.cdots i.bad{background:var(--cam-bad)}
+.crec{color:var(--cam-bad);font-weight:600}
+.crec::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:currentColor;margin-inline-end:4px;vertical-align:middle}
 @media (min-width:640px){
   #app{padding-block:28px 56px}
   #home{gap:20px}
@@ -1102,7 +1168,7 @@ function sideM(p, s, need) {
     thigh: H.y >= K.y ? 0 : Math.atan2(K.y - H.y, Math.abs(K.x - H.x)) * DEG,   // 0 = thigh level with the floor
     arm: Math.atan2(E.x - S.x, E.y - S.y) * DEG,                                // upper arm, measured from hanging down
     armUp: Math.atan2(E.x - S.x, S.y - E.y) * DEG,                              // upper arm, measured from straight up
-    hipY: H.y / tl, ankY: A.y / tl,                                             // heights, in torso lengths (down = bigger)
+    hipY: H.y, ankY: A.y, tl,                                                   // raw heights in pixels; turned into torso lengths per rep (see py)
     wrY: (S.y - W.y) / tl, elbY: (S.y - E.y) / tl, fore: (E.y - W.y) / tl};     // wrist / elbow above the shoulder, wrist above the elbow
 }
 function frameM(p, K, T) {
@@ -1125,11 +1191,13 @@ function frameM(p, K, T) {
   return m;
 }
 const span = (R, k) => R.max[k] - R.min[k];
+const py = (R, k) => span(R, k) / R.ref;   // how far a point moved, in torso lengths measured while standing still (leaning shortens the torso on camera)
 const tilt = R => Math.max(Math.abs(R.min.lean), Math.abs(R.max.lean));
 const flat = R => R.min.lean * R.max.lean > 0 ? Math.min(Math.abs(R.min.lean), Math.abs(R.max.lean)) : 0;
 const SIDE = m => m.wide > .5 ? 'لف جنبك للكاميرا' : null;
 const FACE = m => m.wide < .55 ? 'قابل الكاميرا بوجهك' : null;
 const STAND = m => Math.abs(m.lean) > 25 ? 'وكف عدل' : null;
+const DG = v => Math.round(v) + '°';
 const NOT = 'ما حسبتها — هاي مو حركة التمرين';
 const FAST = {l:'السرعة', bad:R => R.full < 800, msg:'سريع هواي — نزّل على مهلك', say:'أبطأ شوية'};
 /* pose: start position (and camera side) that must be held before a rep counts.
@@ -1137,18 +1205,21 @@ const FAST = {l:'السرعة', bad:R => R.full < 800, msg:'سريع هواي �
    checks: the first one that fails is the correction; a rep is صح only when none fails. */
 const KINDS = {
   squat:{view:'side', need:'leg', mode:'near', prim:'knee', dir:-1, enter:140, exit:156,
+    meter:{k:'thigh', a:85, b:18, l:'العمق'}, stats:R => [['العمق', R.min.thigh <= 1 ? 'موازي أو أعمق' : DG(R.min.thigh) + ' فوك الموازي'], ['ميلان الصدر', DG(tilt(R))], ['أوطى زاوية ركبة', DG(R.min.knee)]],
     pose:m => SIDE(m) || STAND(m) || (m.knee < 155 || m.hip < 155 ? 'وكف عدل وابدأ من فوك' : null),
-    keep:R => span(R, 'ankY') > .2 || span(R, 'hipY') < .12 || tilt(R) > 80 ? NOT : null, checks:[
+    keep:R => py(R, 'ankY') > .2 || py(R, 'hipY') < .12 || tilt(R) > 80 ? NOT : null, checks:[
     {l:'العمق', bad:R => R.min.thigh > 18, msg:'انزل أكثر — فخذك يوصل موازي للأرض', say:'انزل أكثر'},
     {l:'ميلان الصدر', bad:R => tilt(R) > 55, msg:'صدرك نازل لكدام هواي — ارفع صدرك', say:'ارفع صدرك'},
     {l:'الوكفة للآخر', bad:R => R.max.knee < 160 || R.max.hip < 160, msg:'اوكف للآخر فوك قبل العدّة الجاية', say:'اوكف للآخر'}]},
   hinge:{view:'side', need:'leg', mode:'near', prim:'hip', dir:-1, enter:150, exit:163,
+    meter:{k:'hip', a:170, b:115, l:'النزول'}, stats:R => [['زاوية الورك تحت', DG(R.min.hip)], ['ثنية الركبة', DG(R.min.knee)], ['ميلان الصدر', DG(tilt(R))]],
     pose:m => SIDE(m) || STAND(m) || (m.knee < 155 || m.hip < 155 ? 'وكف عدل وابدأ من فوك' : null),
-    keep:R => span(R, 'ankY') > .2 || span(R, 'lean') < 25 || R.min.knee < 80 ? NOT : null, checks:[
+    keep:R => py(R, 'ankY') > .2 || span(R, 'lean') < 25 || R.min.knee < 80 ? NOT : null, checks:[
     {l:'ثنية الركبة', bad:R => R.min.knee < 125, msg:'ركبتك تنثني هواي — ادفع وركك لورا', say:'ادفع وركك لورا'},
     {l:'النزول', bad:R => R.min.hip > 115, msg:'انزل أكثر — لحد ما تحس الشد بالفخذ الخلفي', say:'انزل أكثر'},
     {l:'الوكفة للآخر', bad:R => R.max.hip < 162, msg:'اوكف للآخر وعصّر مؤخرتك فوك', say:'اوكف للآخر'}]},
   curl:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:110, exit:125,
+    meter:{k:'elbow', a:165, b:60, l:'الرفعة'}, stats:R => [['زاوية الكوع فوك', DG(R.min.elbow)], ['زاوية الكوع تحت', DG(R.max.elbow)], ['حركة الكوع', DG(span(R, 'arm'))], ['تمرجح الظهر', DG(span(R, 'lean'))]],
     pose:m => SIDE(m) || STAND(m) || (Math.abs(m.arm) > 25 || m.elbow < 140 ? 'نزّل إيدك جنبك وابدأ' : null),
     keep:R => Math.max(Math.abs(R.min.arm), Math.abs(R.max.arm)) > 60 || tilt(R) > 40 || span(R, 'wrY') < .45 ? NOT : null, checks:[
     {l:'تمرجح الظهر', bad:R => span(R, 'lean') > 12, msg:'لا تتمرجح بظهرك — خفّف الوزن إذا لازم', say:'لا تتمرجح'},
@@ -1156,23 +1227,27 @@ const KINDS = {
     {l:'الرفعة للآخر', bad:R => R.min.elbow > 60, msg:'ارفع للآخر واعصر فوك', say:'ارفع أكثر'},
     {l:'النزلة للآخر', bad:R => R.max.elbow < 150, msg:'نزّل للآخر — افرد إيدك', say:'نزّل للآخر'}]},
   triext:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:120, exit:140,
+    meter:{k:'elbow', a:165, b:75, l:'المطّة'}, stats:R => [['زاوية الكوع ورا الراس', DG(R.min.elbow)], ['الفردة', DG(R.max.elbow)], ['حركة الكوع', DG(span(R, 'armUp'))]],
     pose:m => SIDE(m) || (m.elbY < .05 || Math.abs(m.armUp) > 70 ? 'ارفع كوعك فوك جنب راسك وابدأ' : null),
     keep:R => Math.max(Math.abs(R.min.armUp), Math.abs(R.max.armUp)) > 85 || R.min.elbY < -.1 || span(R, 'wrY') < .3 ? NOT : null, checks:[
     {l:'ثبات الكوع', bad:R => span(R, 'armUp') > 30, msg:'كوعك يتحرك — بس الساعد يتحرك', say:'ثبّت كوعك'},
     {l:'المطّة ورا الراس', bad:R => R.min.elbow > 75, msg:'نزّل أكثر ورا راسك', say:'نزّل أكثر'},
     {l:'الفردة للآخر', bad:R => R.max.elbow < 155, msg:'افرد إيدك للآخر', say:'افرد إيدك'}]},
   press:{view:'front', need:'arm', mode:'both', prim:'elbow', dir:1, enter:130, exit:115,
+    meter:{k:'elbow', a:95, b:155, l:'الدفعة'}, stats:R => [['الفردة فوك', DG(R.max.elbow)], ['النزلة', DG(R.min.elbow)], ['تقوّس الظهر', DG(span(R, 'lean'))]],
     pose:m => FACE(m) || STAND(m) || (m.fore < .1 || m.elbY < -.45 ? 'ارفع الدمبلات لمستوى كتفك وابدأ' : null),
-    keep:R => tilt(R) > 30 || R.min.fore < -.05 || span(R, 'wrY') < .3 || R.max.sym > 40 ? NOT : null, checks:[
+    keep:R => tilt(R) > 30 || R.min.fore < -.05 || span(R, 'wrY') < .15 || R.max.sym > 40 ? NOT : null, checks:[
     {l:'الدفعة للآخر', bad:R => R.max.elbow < 155, msg:'ادفع لفوك للآخر', say:'ادفع للآخر'},
     {l:'النزلة', bad:R => R.min.elbow > 100, msg:'نزّل أكثر — الدمبل لمستوى إذنك', say:'نزّل أكثر'},
     {l:'تقوّس الظهر', bad:R => span(R, 'lean') > 12, msg:'لا تقوّس ظهرك لورا — شد بطنك', say:'شد بطنك'}]},
   bench:{view:'bench', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:125, exit:145, beta:1,
+    meter:{k:'elbow', a:165, b:95, l:'النزلة'}, stats:R => [['النزلة (زاوية الكوع)', DG(R.min.elbow)], ['الفردة فوك', DG(R.max.elbow)]],
     pose:m => SIDE(m) || (Math.abs(m.lean) < 35 ? 'تمدد على البنج' : m.wrY < .25 || m.elbow < 140 ? 'افرد إيدك فوك صدرك وابدأ' : null),
     keep:R => flat(R) < 30 || R.min.fore < -.1 || span(R, 'wrY') < .3 ? NOT : null, checks:[
     {l:'النزلة للصدر', bad:R => R.min.elbow > 95, msg:'نزّل للآخر — لحد صدرك', say:'نزّل للآخر'},
     {l:'الفردة فوك', bad:R => R.max.elbow < 155, msg:'افرد إيدك فوك', say:'افرد إيدك'}]},
   raise:{view:'front', need:'arm', mode:'lead', prim:'abd', dir:1, enter:45, exit:30,
+    meter:{k:'abd', a:15, b:72, l:'الارتفاع'}, stats:R => [['أعلى ارتفاع للإيد', DG(R.max.abd)], ['ثنية الكوع', DG(R.min.elbow)], ['تمرجح الجسم', DG(span(R, 'lean'))]],
     pose:m => FACE(m) || STAND(m) || (m.abd > 35 || m.elbow < 120 ? 'نزّل إيدك جنبك وابدأ' : null),
     keep:R => tilt(R) > 35 || R.min.elbow < 80 ? NOT : null, checks:[
     {l:'تمرجح الجسم', bad:R => span(R, 'lean') > 12, msg:'لا تتمرجح بجسمك — خفّف الوزن', say:'لا تتمرجح'},
@@ -1180,28 +1255,33 @@ const KINDS = {
     {l:'ارتفاع الإيد', bad:R => R.max.abd < 72, msg:'ارفع أكثر — لمستوى الكتف', say:'ارفع أكثر'},
     {l:'ثنية الكوع', bad:R => R.min.elbow < 110, msg:'كوعك مثني هواي — افرده شوية', say:'افرد كوعك شوية'}]},
   pull:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140,
+    meter:{k:'elbow', a:165, b:80, l:'السحبة'}, stats:R => [['السحبة (زاوية الكوع)', DG(R.min.elbow)], ['المطّة فوك', DG(R.max.elbow)]],
     pose:m => FACE(m) || (m.wrY < .35 || m.elbow < 130 ? 'مسك البار وافرد إيدك فوك وابدأ' : null),
     keep:R => R.max.wrY < .35 || span(R, 'wrY') < .2 || R.min.fore < -.1 || R.max.sym > 40 ? NOT : null, checks:[
     {l:'السحبة للآخر', bad:R => R.min.elbow > 80, msg:'اسحب أكثر — لحد أعلى صدرك', say:'اسحب أكثر'},
     {l:'المطّة فوك', bad:R => R.max.elbow < 155, msg:'رجّع البار للآخر وافرد إيدك', say:'افرد إيدك فوك'}]},
   pullup:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140,
+    meter:{k:'elbow', a:165, b:80, l:'الرفعة'}, stats:R => [['الرفعة (زاوية الكوع)', DG(R.min.elbow)], ['النزلة', DG(R.max.elbow)]],
     pose:m => FACE(m) || (m.wrY < .35 || m.elbow < 130 ? 'تعلّك بالبار وافرد إيدك وابدأ' : null),
     keep:R => R.max.wrY < .35 || span(R, 'wrY') < .2 || R.min.fore < -.1 || R.max.sym > 40 ? NOT : null, checks:[
     {l:'الرفعة للآخر', bad:R => R.min.elbow > 80, msg:'ارفع أكثر — ذقنك فوك البار', say:'ارفع أكثر'},
     {l:'النزلة للآخر', bad:R => R.max.elbow < 155, msg:'انزل للآخر وافرد إيدك', say:'انزل للآخر'}]},
   legext:{view:'side', need:'knee', mode:'near', prim:'knee', dir:1, enter:125, exit:110,
+    meter:{k:'knee', a:90, b:160, l:'الفردة'}, stats:R => [['الفردة (زاوية الركبة)', DG(R.max.knee)], ['النزلة', DG(R.min.knee)]],
     pose:m => SIDE(m) || (m.thigh > 30 ? 'اكعد على الجهاز' : m.knee > 120 ? 'نزّل رجلك وابدأ' : null),
-    keep:R => R.max.thigh > 35 || span(R, 'hipY') > .2 || span(R, 'ankY') < .25 ? NOT : null, checks:[
+    keep:R => R.max.thigh > 35 || py(R, 'hipY') > .2 || py(R, 'ankY') < .1 ? NOT : null, checks:[
     {l:'الفردة للآخر', bad:R => R.max.knee < 160, msg:'افرد رجلك للآخر واعصر', say:'افرد رجلك'},
     {l:'النزلة', bad:R => R.min.knee > 100, msg:'نزّل للآخر قبل ما ترفع', say:'نزّل للآخر'}]},
   legcurl:{view:'side', need:'knee', mode:'near', prim:'knee', dir:-1, enter:130, exit:145,
+    meter:{k:'knee', a:165, b:85, l:'السحبة'}, stats:R => [['السحبة (زاوية الركبة)', DG(R.min.knee)], ['الرجعة', DG(R.max.knee)]],
     pose:m => SIDE(m) || (m.thigh > 30 ? 'اكعد على الجهاز' : m.knee < 135 ? 'افرد رجلك وابدأ' : null),
-    keep:R => R.max.thigh > 35 || span(R, 'hipY') > .2 || span(R, 'ankY') < .25 ? NOT : null, checks:[
+    keep:R => R.max.thigh > 35 || py(R, 'hipY') > .2 || py(R, 'ankY') < .1 ? NOT : null, checks:[
     {l:'السحبة للآخر', bad:R => R.min.knee > 85, msg:'اسحب أكثر', say:'اسحب أكثر'},
     {l:'الرجعة للآخر', bad:R => R.max.knee < 155, msg:'رجّع رجلك للآخر', say:'رجّع للآخر'}]}
 };
+/* overhead triceps is left out on purpose: tested on rendered clips, the head hides the forearm from the side and the elbow angle comes out wrong */
 const CAMEX = {squat:'squat', smithsq:'squat', goblet:'squat', rdl:'hinge', bbcurl:'curl', hammer:'curl', bayes:'curl', inclinecurl:'curl',
-  ohtri_cable:'triext', ohtri_db:'triext', dbpress:'press', bench:'bench', inclinedb:'bench', latraise:'raise', cablelat:'raise',
+  dbpress:'press', bench:'bench', inclinedb:'bench', latraise:'raise', cablelat:'raise',
   pulldown:'pull', pullup:'pullup', legext:'legext', seatcurl:'legcurl'};
 function mkTrack(K) { return {K, st:'idle', rep:null, n:0, good:0, skip:0, faults:{}, side:null, sm:null, armed:false, okFrom:null, lastOk:-1e9, hint:null}; }
 /* A rep only starts from the start position (held 0.3 s the first time), goes past `enter`, comes back past `exit`,
@@ -1210,6 +1290,7 @@ function feed(T, m, t) {
   const K = T.K;
   for (const k in m) if (!isFinite(m[k])) return null;
   const v = m[K.prim], past = (x, th) => K.dir < 0 ? x < th : x > th, hint = K.pose(m);
+  if (!hint) T.ref = T.ref ? T.ref + (m.tl - T.ref) * .1 : m.tl;
   if (hint) T.okFrom = null;
   else if (T.armed) T.lastOk = t;
   else { if (T.okFrom === null) T.okFrom = t; if (t - T.okFrom >= 300) { T.armed = true; T.lastOk = t; } }
@@ -1218,7 +1299,7 @@ function feed(T, m, t) {
     const ready = T.armed && t - T.lastOk < 1500;
     T.hint = ready ? null : hint || 'ثبّت لحظة…';
     if (!ready || !past(v, K.enter)) return null;
-    T.st = 'work'; T.rep = {t0:t, min:{}, max:{}};
+    T.st = 'work'; T.rep = {t0:t, min:{}, max:{}, ref:T.ref || m.tl};
   }
   const R = T.rep;
   for (const k in m) {
@@ -1226,6 +1307,7 @@ function feed(T, m, t) {
     if (R.max[k] === undefined || m[k] > R.max[k]) R.max[k] = m[k];
   }
   if (T.st === 'work') {
+    if (R.kv === undefined || (K.dir < 0 ? v < R.kv : v > R.kv)) { R.kv = v; R.tk = t; }   // the deepest / highest point
     if (t - R.t0 > 15000) { T.st = 'idle'; T.rep = null; return null; }
     if (!past(v, K.exit)) { T.st = 'tail'; R.t1 = R.t2 = t; R.ext = R.t2v = v; R.path = []; }
     return null;
@@ -1239,45 +1321,81 @@ function feed(T, m, t) {
   for (let i = 0; i < R.path.length; i += 2) if (Math.abs(R.path[i + 1] - R.ext) < 8) { R.full = R.path[i] - R.t0; break; }   // time until the rep is (nearly) back at the start
   if (R.dur < 250) return null;
   const no = R.min.vis < .6 ? 'ما حسبتها — ما شفتك زين، خلّي جسمك كله يبين' : K.keep(R);
-  if (no) { T.skip++; return {n:T.n, skip:no}; }
+  if (no) { T.skip++; return {n:T.n, skip:no, R}; }
   const f = K.checks.concat(FAST).find(c => c.bad(R)) || null;
   T.n++; T.lastOk = t;
   if (f) T.faults[f.msg] = (T.faults[f.msg] || 0) + 1; else T.good++;
-  return {n:T.n, fault:f};
+  return {n:T.n, fault:f, R};
+}
+/* the set ended while the last rep was still settling: close it now */
+function flush(T, t) { return T.st === 'tail' && T.sm ? feed(T, T.sm, Math.max(t, T.rep.t2 + 700)) : null; }
+/* smoothing + rep tracking for one frame (live and recorded video use the same path) */
+function track(T, m, t) {
+  if (!T.sm) T.sm = Object.assign({}, m); else for (const k in m) T.sm[k] += (m[k] - T.sm[k]) * .5;
+  return feed(T, T.sm, t);
 }
 /* cam-ui */
 const CAM_LIVE = /*CAM_LIVE*/true;
 const PUBLIC_URL = 'https://soso694201.github.io/gym-course/';
 const MP = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
 const MODEL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+const MODEL_FULL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task';
 const K_CAM = 'bulk-course.cam';
 const CAMICO = '<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+const VIDICO = '<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10.5l5-3v9l-5-3z"/></svg>';
 const FLIPICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/></svg>';
 const SNDICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>';
 const BONES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
+const JOINTS = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
 const VIEW = {
   side:{b:'من الجنب', t:'حط التلفون على جانبك، مو كدامك', far:'ابعد 2 إلى 3 متر لحد ما يبين جسمك كله، من راسك لرجلك'},
   front:{b:'من كدام', t:'حط التلفون كدامك ووجهك عليه', far:'ابعد حوالي 2 متر لحد ما يبين من راسك لركبتك وإيدك وهي مفتوحة'},
   back:{b:'من كدام أو من ورا', t:'حط التلفون كدامك أو وراك بالنص', far:'ابعد حوالي 2 متر لحد ما تبين إيدك وهي مفرودة فوك'},
   bench:{b:'من الجنب', t:'حط التلفون على جانب البنج وبارتفاع البنج تقريباً', far:'ابعد حوالي 2 متر لحد ما يبين جسمك كله وانت متمدد'}
 };
-let C = null, poseP = null;
+const METERNAME = {thigh:'زاوية الفخذ مع الأرض', hip:'زاوية الورك', elbow:'زاوية الكوع', knee:'زاوية الركبة', abd:'ارتفاع الإيد'};
+let C = null, poseP = null, liteP = null, fullP = null, anaTs = 0;
 const camBtn = k => CAMEX[k] ? `<button class="camgo" data-cam="${k}">${CAMICO}<span>افحص تكنيكي بالكاميرا</span><small>اختياري</small></button>` : '';
-function loadPose() {
-  if (!poseP) poseP = (async () => {
+function mkPose(model, conf) {
+  return (async () => {
     const v = await import(MP + '/vision_bundle.mjs');
     const fs = await v.FilesetResolver.forVisionTasks(MP + '/wasm');
-    const mk = d => v.PoseLandmarker.createFromOptions(fs, {baseOptions:{modelAssetPath:MODEL, delegate:d}, runningMode:'VIDEO', numPoses:1});
+    const mk = d => v.PoseLandmarker.createFromOptions(fs, {baseOptions:{modelAssetPath:model, delegate:d}, runningMode:'VIDEO', numPoses:1,
+      minPoseDetectionConfidence:conf, minPosePresenceConfidence:conf, minTrackingConfidence:conf});
     try { return await mk('GPU'); } catch (e) { return await mk('CPU'); }
-  })().catch(e => { poseP = null; throw e; });
+  })();
+}
+/* The bigger "full" model is used everywhere: on rendered test clips the "lite" one read a straight knee as 149° (full: 171°).
+   Live, a phone too slow for it drops to lite after a few seconds (see camLoop). */
+function loadPose() {
+  if (!poseP) poseP = mkPose(MODEL_FULL, .5).catch(() => mkPose(MODEL, .5)).catch(e => { poseP = null; throw e; });
   return poseP;
+}
+function loadLite() {
+  if (!liteP) liteP = mkPose(MODEL, .5).catch(e => { liteP = null; throw e; });
+  return liteP;
+}
+function loadFull() {   // recorded video gets its own instance (its clock is the video's, not the camera's)
+  if (!fullP) fullP = mkPose(MODEL_FULL, .4).catch(() => mkPose(MODEL, .4)).catch(e => { fullP = null; throw e; });
+  return fullP;
+}
+const pix = (lm, w, h) => lm.map(q => ({x:q.x * w, y:q.y * h, v:q.x < -.02 || q.x > 1.02 || q.y < -.02 || q.y > 1.02 ? 0 : q.visibility === undefined ? 1 : q.visibility}));
+function drawBones(g, p, col, w) {
+  g.lineWidth = Math.max(3, w / 110); g.lineCap = 'round'; g.strokeStyle = g.fillStyle = col;
+  BONES.forEach(([a, b]) => { if (p[a].v > .4 && p[b].v > .4) { g.beginPath(); g.moveTo(p[a].x, p[a].y); g.lineTo(p[b].x, p[b].y); g.stroke(); } });
+  JOINTS.forEach(i => { if (p[i].v > .4) { g.beginPath(); g.arc(p[i].x, p[i].y, g.lineWidth * 1.1, 0, 7); g.fill(); } });
 }
 function camStop(c) {
   cancelAnimationFrame(c.raf);
+  try { if (c.rec && c.rec.state !== 'inactive') c.rec.stop(); } catch (e) {}
   try { if (c.stream) c.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
   try { if (c.lock) c.lock.release(); } catch (e) {}
   try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
   c.stream = c.lock = null;
+}
+function anaDrop(c) {   // forget the video and everything measured from it
+  if (c.ana) { c.ana.stop = true; if (c.ana.url) URL.revokeObjectURL(c.ana.url); }
+  c.ana = null;
 }
 function camOpen(ex) {
   if (!CAMEX[ex] || !EX[ex]) return;
@@ -1289,7 +1407,7 @@ function camOpen(ex) {
 function camClose() {
   if (!C) return;
   const b = C.back;
-  camStop(C); C = null;
+  camStop(C); anaDrop(C); C = null;
   const el = qs('#cam');
   el.hidden = true; el.className = ''; el.innerHTML = '';
   try { if (b && b.isConnected) b.focus(); } catch (e) {}
@@ -1297,12 +1415,31 @@ function camClose() {
 function camStream(c) {
   return navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:c.face, width:{ideal:640}, height:{ideal:480}}});
 }
+function camAudio() {
+  try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = actx || new AC(); if (actx.state === 'suspended') actx.resume(); } } catch (e) {}
+  try { if (window.speechSynthesis) { speechSynthesis.getVoices(); speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } } catch (e) {}
+}
+function recStart(c) {   // keep the set on the phone so it can be gone through rep by rep afterwards
+  c.rec = null; c.recBlob = null;
+  try {
+    if (!window.MediaRecorder) return;
+    const type = ['video/mp4', 'video/webm;codecs=vp9', 'video/webm'].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+    const r = new MediaRecorder(c.stream, type ? {mimeType:type, videoBitsPerSecond:1500000} : undefined), parts = [];
+    r.ondataavailable = e => { if (e.data && e.data.size) parts.push(e.data); };
+    r.onstop = () => {
+      if (C !== c || c.rec !== r) return;   // closed, or replaced after a camera flip
+      if (parts.length) c.recBlob = new Blob(parts, {type:r.mimeType || type || 'video/webm'}); else c.rec = null;
+      if (c.step === 'sum') camRender();
+    };
+    r.start(1000); c.rec = r;
+  } catch (e) { c.rec = null; }
+}
 async function camStart() {
   const c = C;
   if (!c || c.step === 'load') return;
+  anaDrop(c);
   c.step = 'load'; c.err = ''; camRender();
-  try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = actx || new AC(); if (actx.state === 'suspended') actx.resume(); } } catch (e) {}
-  try { if (window.speechSynthesis) { speechSynthesis.getVoices(); speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } } catch (e) {}
+  camAudio();
   try {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw {name:'NotFoundError'};
     c.stream = await camStream(c);
@@ -1319,11 +1456,13 @@ async function camStart() {
     return camRender();
   }
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (C === c && c.stream) c.lock = l; else l.release(); }).catch(() => {}); } catch (e) {}
-  c.step = 'live'; c.T = mkTrack(c.K); c.seen = 0; c.msg = '';
+  c.step = 'live'; c.T = mkTrack(c.K); c.seen = 0; c.msg = ''; c.log = [];
+  recStart(c);
   camRender();
 }
 function camEnd() {
   if (!C || C.step !== 'live') return;
+  flush(C.T, performance.now());   // a last rep that was still settling counts too
   camStop(C);
   C.step = 'sum';
   camRender();
@@ -1334,12 +1473,14 @@ async function camFlip() {
   c.busy = true;
   c.face = c.face === 'user' ? 'environment' : 'user';
   try {
+    try { if (c.rec && c.rec.state !== 'inactive') c.rec.stop(); } catch (e) {}
     if (c.stream) c.stream.getTracks().forEach(t => t.stop());
     c.stream = await camStream(c);
     if (C !== c || c.step !== 'live') return camStop(c);
     c.video.srcObject = c.stream;
     c.video.play().catch(() => {});
     qs('#cam .cview').classList.toggle('mir', c.face === 'user');
+    recStart(c);
   } catch (e) { if (C === c) camEnd(); }
   c.busy = false;
 }
@@ -1367,6 +1508,14 @@ function camMsg(text, cls) {
   const el = qs('#cmsg');
   if (el) { el.textContent = text; el.className = 'cmsg' + (cls ? ' ' + cls : ''); }
 }
+const prog = (M, v) => Math.max(0, Math.min(1.15, (v - M.a) / (M.b - M.a)));
+function camMeter(v) {
+  const M = C.K.meter, el = qs('#cmf');
+  if (!M || !el) return;
+  const u = v === null ? 0 : prog(M, v);
+  el.style.height = (u / 1.15 * 100).toFixed(1) + '%';
+  el.parentNode.classList.toggle('hit', u >= 1);
+}
 function camFrame(lm, w, h, now) {
   const c = C, cv = c.canvas;
   if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
@@ -1374,32 +1523,32 @@ function camFrame(lm, w, h, now) {
   g.clearRect(0, 0, w, h);
   let m = null;
   if (lm) {
-    const p = lm.map(q => ({x:q.x * w, y:q.y * h, v:q.x < -.02 || q.x > 1.02 || q.y < -.02 || q.y > 1.02 ? 0 : q.visibility === undefined ? 1 : q.visibility}));
+    const p = pix(lm, w, h);
     m = frameM(p, c.K, c.T);
-    g.lineWidth = Math.max(3, w / 110); g.lineCap = 'round';
-    g.strokeStyle = g.fillStyle = now < c.flashTo ? c.flash : c.col.line;
-    BONES.forEach(([a, b]) => { if (p[a].v > .4 && p[b].v > .4) { g.beginPath(); g.moveTo(p[a].x, p[a].y); g.lineTo(p[b].x, p[b].y); g.stroke(); } });
-    [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28].forEach(i => { if (p[i].v > .4) { g.beginPath(); g.arc(p[i].x, p[i].y, g.lineWidth * 1.1, 0, 7); g.fill(); } });
+    drawBones(g, p, now < c.flashTo ? c.flash : c.col.line, w);
     if (m.vis < SEEN) m = null;
   }
   if (!m) {
-    if (now - c.seen > 1200) { c.T.st = 'idle'; c.T.rep = null; c.T.sm = null; c.T.armed = false; c.T.okFrom = null; camMsg(c.seen ? 'ما أشوفك كلك — ارجع لورا شوية' : 'وكف بمكانك لحد ما أشوفك'); }
+    if (now - c.seen > 1200) { c.T.st = 'idle'; c.T.rep = null; c.T.sm = null; c.T.armed = false; c.T.okFrom = null; camMeter(null); camMsg(c.seen ? 'ما أشوفك كلك — ارجع لورا شوية' : 'وكف بمكانك لحد ما أشوفك'); }
     return;
   }
   c.seen = now;
-  const s = c.T.sm;
-  if (!s) c.T.sm = Object.assign({}, m); else for (const k in m) s[k] += (m[k] - s[k]) * .5;
-  const ev = feed(c.T, c.T.sm, now);
+  const ev = track(c.T, m, now);
+  camMeter(c.T.sm[c.K.meter.k]);
   if (!ev) {
     if (c.T.st === 'idle' && now > c.holdTo) camMsg(c.T.hint || 'جاهز — ابدأ');
     return;
   }
   c.holdTo = now + 2000; c.msg = '';
+  const cls = ev.skip ? 'skip' : ev.fault ? 'bad' : 'ok';
+  c.log.push(cls);
+  const dots = qs('#cdots');
+  if (dots) dots.insertAdjacentHTML('beforeend', `<i class="${cls}"></i>`);
   if (ev.skip) { camMsg(ev.skip, 'skip'); camSay('ما حسبتها', 'skip'); return; }
   qs('#cn').textContent = ev.n;
   c.flash = ev.fault ? c.col.bad : c.col.ok; c.flashTo = now + 900;
-  camMsg(ev.fault ? ev.fault.msg : 'صح', ev.fault ? 'bad' : 'ok');
-  camSay(ev.fault ? ev.fault.say : String(ev.n), ev.fault ? 'bad' : 'ok');
+  camMsg(ev.fault ? ev.fault.msg : 'صح', cls);
+  camSay(ev.fault ? ev.fault.say : String(ev.n), cls);
 }
 function camLoop() {
   const c = C;
@@ -1408,10 +1557,163 @@ function camLoop() {
   if (v.readyState >= 2 && v.videoWidth && v.currentTime !== c.vt) {
     c.vt = v.currentTime;
     let lm = null;
+    const t0 = performance.now();
     try { const r = c.pose.detectForVideo(v, now); lm = r && r.landmarks && r.landmarks[0]; } catch (e) {}
+    const dt = performance.now() - t0;
+    c.dt = c.nf ? c.dt * .9 + dt * .1 : dt; c.nf = (c.nf || 0) + 1;
+    if (c.nf > 45 && c.dt > 110 && !c.lite) { c.lite = true; loadLite().then(p => { if (C === c) c.pose = p; }).catch(() => {}); }   // phone too slow for the full model
     camFrame(lm, v.videoWidth, v.videoHeight, now);
   }
   c.raf = requestAnimationFrame(camLoop);
+}
+
+/* ---------- recorded video: every frame measured, then a rep-by-rep report ---------- */
+const wait = (el, ev, ms) => new Promise(res => { let done = false; const f = () => { if (!done) { done = true; el.removeEventListener(ev, f); res(true); } }; el.addEventListener(ev, f); setTimeout(() => { if (!done) { done = true; el.removeEventListener(ev, f); res(false); } }, ms); });
+async function seekTo(v, t) { if (Math.abs(v.currentTime - t) < .001) return; v.currentTime = t; await wait(v, 'seeked', 3000); }
+async function vidReady(v) {
+  if (v.readyState < 2) await wait(v, 'loadeddata', 15000);
+  if (!isFinite(v.duration)) { v.currentTime = 1e7; await wait(v, 'durationchange', 4000); v.currentTime = 0; await wait(v, 'seeked', 3000); }   // recorded webm has no length until you jump to its end
+  return v.videoWidth > 0 && isFinite(v.duration) && v.duration > 0;
+}
+async function camAnalyze(file) {
+  const c = C;
+  if (!c || !file) return;
+  camStop(c); anaDrop(c);
+  const A = c.ana = {url:URL.createObjectURL(file), p:0, stop:false};
+  c.step = 'ana'; c.err = ''; camRender();
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = A.url;
+  try {
+    const [pose, ok] = await Promise.all([loadFull(), vidReady(v)]);
+    if (C !== c || A.stop) return;
+    if (!ok) throw {name:'video'};
+    const sc = Math.min(1, 480 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * sc), h = Math.round(v.videoHeight * sc);
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const g = cv.getContext('2d', {willReadFrequently:true});
+    const dur = Math.min(v.duration, 150), step = 1 / 15, F = [];
+    for (let t = 0; t < dur; t += step) {
+      if (C !== c || A.stop) return;
+      await seekTo(v, t);
+      g.drawImage(v, 0, 0, w, h);
+      let lm = null;
+      try {
+        const src = window.createImageBitmap ? await createImageBitmap(cv) : cv;
+        const r = pose.detectForVideo(src, anaTs += 67);
+        if (src.close) src.close();
+        lm = r && r.landmarks && r.landmarks[0];
+      } catch (e) {}
+      F.push({t:t * 1000, lm:lm ? lm.map(q => ({x:q.x, y:q.y, visibility:q.visibility})) : null});
+      A.p = t / dur;
+      const bar = qs('#capro');
+      if (bar) { bar.style.width = (A.p * 100).toFixed(1) + '%'; qs('#capct').textContent = Math.round(A.p * 100) + '%'; }
+    }
+    // run the same checker over the measured frames
+    const K = c.K, T = mkTrack(K), ev = [], line = [], hints = {};
+    let seen = -1e9, body = 0;
+    for (const f of F) {
+      let m = null, p = null;
+      if (f.lm) { p = pix(f.lm, w, h); m = frameM(p, K, T); if (m.vis < SEEN) m = null; }
+      if (!m) { if (f.t - seen > 1200) { T.st = 'idle'; T.rep = null; T.sm = null; T.armed = false; T.okFrom = null; } line.push(null); continue; }
+      seen = f.t; body++;
+      const e = track(T, m, f.t);
+      line.push(T.sm[K.meter.k]);
+      if (T.st === 'idle' && T.hint) hints[T.hint] = (hints[T.hint] || 0) + 1;
+      if (e) ev.push(e);
+    }
+    const last = flush(T, F.length ? F[F.length - 1].t : 0);
+    if (last) ev.push(last);
+    // a still of each rep at its deepest / highest moment, with the skeleton on it
+    const near = t => { let b = null; for (const f of F) if (f.lm && (!b || Math.abs(f.t - t) < Math.abs(b.t - t))) b = f; return b; };
+    const st = getComputedStyle(qs('#cam'));
+    const col = {ok:st.getPropertyValue('--cam-okline').trim(), bad:st.getPropertyValue('--cam-bad').trim(), skip:st.getPropertyValue('--cam-muted').trim(), line:st.getPropertyValue('--cam-line').trim()};
+    const shot = async (t, cls) => {
+      await seekTo(v, t / 1000);
+      g.drawImage(v, 0, 0, w, h);
+      const f = near(t);
+      if (f) drawBones(g, pix(f.lm, w, h), col[cls] || col.line, w);
+      return cv.toDataURL('image/jpeg', .78);
+    };
+    for (const e of ev) {
+      if (C !== c || A.stop) return;
+      e.cls = e.skip ? 'skip' : e.fault ? 'bad' : 'ok';
+      e.img = await shot(e.R.tk !== undefined ? e.R.tk : e.R.t1, e.cls);
+    }
+    A.none = !ev.length ? await shot(F.length ? F[Math.floor(F.length / 2)].t : 0, 'line') : null;
+    const top = Object.keys(hints).sort((a, b) => hints[b] - hints[a])[0];
+    Object.assign(A, {F, ev, line, w, h, dur:dur * 1000, T, body, frames:F.length, hint:top, cut:v.duration > dur + .5});
+    if (/[?&]camdebug/.test(location.search)) window.__camA = A;   // test hook: lets a test page read the measurements
+    c.step = 'rep';
+  } catch (e) {
+    if (C !== c) return;
+    anaDrop(c);
+    c.step = 'intro';
+    c.err = e && e.name === 'video' ? 'ما كدرت أفتح هذا الفيديو. جرب فيديو ثاني، أو صوّر من جديد.' : 'ما كدرت أحمّل الفاحص. تأكد من النت وجرب مرة ثانية.';
+  }
+  v.removeAttribute('src'); v.load();
+  if (C === c) camRender();
+}
+function graphSVG(A, K) {
+  const M = K.meter, W = 320, H = 120, x = t => (t / A.dur * (W - 8) + 4).toFixed(1);
+  const lo = Math.min(M.a, M.b) - 15, hi = Math.max(M.a, M.b) + 15, y = v => (H - 8 - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * (H - 16)).toFixed(1);
+  let d = '', pen = false;
+  A.line.forEach((v, i) => { if (v === null) { pen = false; return; } d += (pen ? 'L' : 'M') + x(A.F[i].t) + ',' + y(v); pen = true; });
+  const reps = A.ev.map(e => `<rect class="${e.cls}" x="${x(e.R.t0)}" y="4" width="${Math.max(2, x(e.R.t2) - x(e.R.t0)).toFixed(1)}" height="${H - 8}" rx="3"/>`).join('');
+  return `<svg class="rgraph" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METERNAME[M.k]} خلال الفيديو">${reps}<line class="tgt" x1="0" x2="${W}" y1="${y(M.b)}" y2="${y(M.b)}"/><path d="${d}"/></svg>`;
+}
+const VERD = e => e.skip ? 'ما انحسبت' : e.fault ? e.fault.msg : 'صح';
+function repHTML(c) {
+  const A = c.ana, K = c.K, T = A.T, e = EX[c.ex], V = VIEW[K.view];
+  const fl = Object.keys(T.faults).sort((a, b) => T.faults[b] - T.faults[a]);
+  const again = `<label class="go ghost cfile">${VIDICO}حلّل فيديو ثاني<input type="file" accept="video/*" data-c="file" hidden></label>`;
+  if (!T.n && !T.skip) {
+    return `<article class="pcard fin"><div><h2>ما لكيت ولا عدّة</h2><p class="rnext">${e.n}</p></div>
+      ${A.none ? `<img class="rnone" src="${A.none}" alt="لقطة من الفيديو مع اللي شافه الفاحص">` : ''}
+      <p class="tip">${!A.body ? 'ما شفت جسمك بالفيديو. لازم يبين جسمك كله، من راسك لرجلك.' : A.hint ? `السبب الأكثر: <b>${A.hint}</b>.` : 'ما بديت أي عدّة من وضعية البداية.'} الفحص لهذا التمرين يصير <b>${V.b}</b>.</p>
+      ${again}<button class="ghost" data-c="close">رجوع</button></article>`;
+  }
+  const cards = A.ev.map((x, i) => `<li class="rcard ${x.cls}"><button class="rshot" data-c="play" data-i="${i}" aria-label="شغّل العدّة ببطء"><img src="${x.img}" alt=""><span class="rplay">${PLAY}</span></button>
+    <div class="rtxt"><p class="rhead"><b>${x.skip ? 'حركة' : 'العدّة ' + x.n}</b><span class="rpill ${x.cls}">${x.skip ? 'ما انحسبت' : x.fault ? 'تعدّل' : 'صح'}</span></p>
+    ${x.cls !== 'ok' ? `<p class="rwhy">${x.skip ? x.skip.replace('ما حسبتها — ', '') : x.fault.msg}</p>` : ''}
+    <dl class="rstats">${K.stats(x.R).map(([l, v]) => `<div><dt>${l}</dt><dd lang="en">${v}</dd></div>`).join('')}${x.R.full ? `<div><dt>وقت العدّة</dt><dd lang="en">${(x.R.full / 1000).toFixed(1)} ث</dd></div>` : ''}</dl></div></li>`).join('');
+  return `<article class="pcard fin rtop">${fl.length || !T.n ? '' : `<div class="done">${CHECK}</div>`}<div><h2><span lang="en">${T.good}</span> من <span lang="en">${T.n}</span> صح</h2><p class="rnext">${e.n}${T.skip ? ` · <span lang="en">${T.skip}</span> ما انحسبت` : ''}</p></div>
+      ${fl.length ? `<ul class="cfl">${fl.map(f => `<li><span>${f}</span><b lang="en" dir="ltr">${T.faults[f]}×</b></li>`).join('')}</ul><p class="tip">بالمجموعة الجاية ركّز على <b>أول ملاحظة</b> بس.</p>` : T.n ? '<p class="tip">كل العدّات نظيفة. إذا كمّلت العدّات المطلوبة، زيد الوزن شوية المرة الجاية.</p>' : ''}</article>
+    <section class="csec rsec"><h3>${METERNAME[K.meter.k]} خلال الفيديو</h3>${graphSVG(A, K)}<p class="rkey"><span><i class="ok"></i>صح</span><span><i class="bad"></i>تعدّل</span><span><i class="skip"></i>ما انحسبت</span><span><i class="tgt"></i>الهدف</span></p></section>
+    ${A.cut ? '<p class="cnote">الفيديو طويل، فحلّلت أول دقيقتين ونص بس.</p>' : ''}
+    <section class="csec"><h3>عدّة عدّة</h3><p class="cnote">دوس على الصورة حتى تشوف العدّة ببطء مع الهيكل.</p><ol class="rcards">${cards}</ol></section>
+    <div class="ract">${again}<button class="ghost" data-c="close">رجوع</button></div>`;
+}
+function camPlay(i) {
+  const c = C, A = c && c.ana, x = A && A.ev[+i];
+  if (!x) return;
+  const box = document.createElement('div');
+  box.className = 'cplay'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'العدّة ببطء');
+  box.innerHTML = `<div class="cpv"><video playsinline muted></video><canvas></canvas></div><p class="cpcap"><b>${x.skip ? 'حركة' : 'العدّة ' + x.n}</b> · ${VERD(x)} · <span>نص السرعة</span></p><button class="cbtn" data-c="unplay" aria-label="سكّر">${XICO}</button>`;
+  qs('#cam').appendChild(box);
+  const v = qs('video', box), cv = qs('canvas', box), g = cv.getContext('2d');
+  const t0 = Math.max(0, x.R.t0 / 1000 - .5), t1 = Math.min(A.dur / 1000, (x.R.t2 || x.R.t1) / 1000 + .5);
+  const col = getComputedStyle(qs('#cam')).getPropertyValue(x.cls === 'ok' ? '--cam-okline' : x.cls === 'bad' ? '--cam-bad' : '--cam-muted').trim();
+  v.src = A.url; v.playbackRate = .5;
+  const near = ms => { let lo = 0, hi = A.F.length - 1; while (lo < hi) { const mid = (lo + hi) >> 1; if (A.F[mid].t < ms) lo = mid + 1; else hi = mid; } return A.F[lo]; };
+  const draw = () => {
+    if (!box.isConnected) return;
+    if (v.currentTime >= t1 || v.currentTime < t0 - .05) { v.currentTime = t0; }
+    if (cv.width !== A.w) { cv.width = A.w; cv.height = A.h; }
+    g.clearRect(0, 0, cv.width, cv.height);
+    const f = near(v.currentTime * 1000);
+    if (f && f.lm) drawBones(g, pix(f.lm, A.w, A.h), col, A.w);
+    box.raf = requestAnimationFrame(draw);
+  };
+  v.addEventListener('loadeddata', () => { v.currentTime = t0; v.playbackRate = .5; v.play().catch(() => {}); draw(); }, {once:true});
+  qs('[data-c="unplay"]', box).focus();
+}
+function camUnplay() {
+  const b = qs('#cam .cplay');
+  if (!b) return false;
+  cancelAnimationFrame(b.raf);
+  const v = qs('video', b); v.pause(); v.removeAttribute('src'); v.load();
+  b.remove();
+  const r = qs('#cam [data-c="play"]'); if (r) r.focus();
+  return true;
 }
 function camRender() {
   const c = C, el = qs('#cam'), e = EX[c.ex], V = VIEW[c.K.view];
@@ -1419,9 +1721,10 @@ function camRender() {
   el.className = c.step === 'live' ? 'live' : '';
   if (c.step === 'live') {
     el.innerHTML = `<div class="cview${c.face === 'user' ? ' mir' : ''}"><video id="cvid" playsinline muted autoplay></video><canvas id="ccan"></canvas></div>
-      <div class="ctop"><button class="cbtn" data-c="close" aria-label="سكّر الكاميرا">${XICO}</button><p class="cname"><b>${e.n}</b><small>الفحص ${V.b}</small></p>
+      <div class="ctop"><button class="cbtn" data-c="close" aria-label="سكّر الكاميرا">${XICO}</button><p class="cname"><b>${e.n}</b><small>الفحص ${V.b}${c.rec ? ' · <span class="crec">يسجّل</span>' : ''}</small></p>
         <button class="cbtn" data-c="sound" aria-pressed="${c.sound}" aria-label="الصوت">${SNDICO}</button><button class="cbtn" data-c="flip" aria-label="بدّل الكاميرا">${FLIPICO}</button></div>
-      <div class="cbot"><div class="creps"><b id="cn" lang="en">${c.T.n}</b><small>عدّة</small></div><p class="cmsg" id="cmsg" role="status"></p><button class="cend" data-c="end">خلصت المجموعة</button></div>`;
+      <div class="cmeter" aria-hidden="true"><span class="cml">${c.K.meter.l}</span><div class="cmt"><i id="cmf"></i><b></b></div></div>
+      <div class="cbot"><div class="cdots" id="cdots" aria-hidden="true"></div><div class="creps"><b id="cn" lang="en">${c.T.n}</b><small>عدّة</small></div><p class="cmsg" id="cmsg" role="status"></p><button class="cend" data-c="end">خلصت المجموعة</button></div>`;
     const cs = getComputedStyle(el), col = n => cs.getPropertyValue(n).trim();
     c.col = {line:col('--cam-line'), ok:col('--cam-okline'), bad:col('--cam-bad')};
     c.video = qs('#cvid'); c.canvas = qs('#ccan'); c.vt = -1; c.flashTo = 0; c.holdTo = 0;
@@ -1431,30 +1734,48 @@ function camRender() {
     c.raf = requestAnimationFrame(camLoop);
     return;
   }
+  if (c.step === 'ana') {
+    el.innerHTML = `<div class="cwrap">${bar}<article class="pcard fin"><div><h2>جاري التحليل…</h2><p class="rnext">${e.n}</p></div>
+      <div class="cprog" role="progressbar" aria-label="التحليل"><i id="capro"></i></div><p class="cnote"><b id="capct" lang="en">0%</b> · أفحص كل لقطة بالفيديو. أول مرة يحمّل الفاحص الدقيق (حوالي 9 ميغا).</p>
+      <p class="cnote">الفيديو ما يطلع من تلفونك.</p><button class="ghost" data-c="cancel">إلغاء</button></article></div>`;
+    return;
+  }
+  if (c.step === 'rep') {
+    el.innerHTML = `<div class="cwrap">${bar}${repHTML(c)}</div>`;
+    el.scrollTop = 0;
+    return;
+  }
   if (c.step === 'sum') {
     const T = c.T, fl = Object.keys(T.faults).sort((a, b) => T.faults[b] - T.faults[a]);
     const sk = T.skip ? `<p class="cnote"><b lang="en">${T.skip}</b> ${T.skip === 1 ? 'حركة' : 'حركات'} ما حسبتها لأن ما طلعت حركة التمرين، لو ما شفتك زين.</p>` : '';
+    const full = c.recBlob ? `<button class="go" data-c="report">${VIDICO}شوف التقرير الكامل بالصور</button>` : c.rec ? '<p class="cnote">جاري تجهيز التسجيل…</p>' : '';
     el.innerHTML = `<div class="cwrap">${bar}<article class="pcard fin">${!T.n
       ? `<div><h2>ما عدّيت ولا عدّة</h2></div>${sk}<p class="tip">تأكد التلفون يشوفك <b>${V.b}</b> وجسمك كله بالصورة، وابدأ كل عدّة من وضعية البداية.</p>`
       : `${fl.length ? '' : `<div class="done">${CHECK}</div>`}<div><h2><span lang="en">${T.good}</span> من <span lang="en">${T.n}</span> صح</h2><p class="rnext">${e.n}</p></div>
         ${fl.length ? `<ul class="cfl">${fl.map(f => `<li><span>${f}</span><b lang="en" dir="ltr">${T.faults[f]}×</b></li>`).join('')}</ul><p class="tip">بالمجموعة الجاية ركّز على <b>أول ملاحظة</b> بس. وحدة وحدة تتصلح.</p>`
           : '<p class="tip">كل العدّات نظيفة. إذا كمّلت العدّات المطلوبة، زيد الوزن شوية المرة الجاية.</p>'}${sk}`}
-      <button class="go" data-c="again">${CAMICO}افحص مجموعة ثانية</button><button class="ghost" data-c="close">رجوع</button></article></div>`;
+      ${full}<button class="${c.recBlob ? 'ghost' : 'go'}" data-c="again">${CAMICO}افحص مجموعة ثانية</button><button class="ghost" data-c="close">رجوع</button></article></div>`;
     return;
   }
   const labels = c.K.checks.map(k => k.l).filter((l, i, a) => a.indexOf(l) === i);
+  const ways = !CAM_LIVE
+    ? `<p class="cerr">الكاميرا والفيديو ما يشتغلن داخل هذا الرابط. افتح الموقع العام وجربها من هناك.</p><a class="go" href="${PUBLIC_URL}" target="_blank" rel="noopener">افتح الموقع العام</a>`
+    : `<div class="copts">
+        <div class="copt"><h3>${CAMICO}مباشر</h3><p>سنّد التلفون وتمرن. يعدّ ويكلك بعد كل عدّة، ويسجّل المجموعة حتى تشوف تقريرها بعدين.</p>
+          ${c.step === 'load' ? '<button class="go" disabled>جاري فتح الكاميرا…</button>' : `<button class="go" data-c="start">افتح الكاميرا</button>`}</div>
+        <div class="copt"><h3>${VIDICO}حلّل فيديو</h3><p>صوّر مجموعة كاملة، لو اختار فيديو من الألبوم. يطلعلك تقرير عدّة عدّة بالصور والأرقام، وتكدر تشوف كل عدّة ببطء.</p>
+          <label class="go ghost cfile">اختار أو صوّر فيديو<input type="file" accept="video/*" data-c="file" hidden></label></div>
+      </div>`;
   el.innerHTML = `<div class="cwrap">${bar}<article class="pcard">
-    <div class="ptitle"><h2>خلّي الكاميرا تشوف تكنيكك</h2><p class="csub">اختياري · يعدّ عدّاتك ويكلك بعد كل عدّة: صح، لو شنو تعدّل</p></div>
-    <ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>خذ وضعية البداية واثبت لحظة لحد ما يكلك <b>جاهز</b>، وعلّي الصوت حتى تسمع الملاحظة وانت تتمرن.</span></li></ol>
-    <p class="cnote"><b>صارم:</b> يكول «صح» بس إذا العدّة كاملة ونظيفة. أي حركة مو حركة التمرين يكلك «ما حسبتها» وما يعدّها.</p>
-    <div class="csec"><h3>شنو يفحص بهذا التمرين</h3><ul class="meta">${labels.map(l => `<li>${l}</li>`).join('')}<li>عدّ العدّات</li></ul></div>
-    ${c.K.beta ? '<p class="cnote">هذا التمرين فحصه <b>تجريبي</b> لأن جسمك متمدد والكاميرا تشوفه أصعب. إذا طلعت النتيجة غريبة لا تعتمد عليها.</p>' : ''}
-    <p class="cnote"><b>خصوصيتك:</b> الصورة تبقى بتلفونك. ما تنرفع لأي مكان وما تنحفظ.</p>
-    <p class="cnote"><b>هذا مساعد مو مدرب.</b> يفحص الزوايا والمدى بس، وما يشوف تقوّس الظهر. إذا حسّيت بألم وكّف.</p>
+    <div class="ptitle"><h2>خلّي الكاميرا تشوف تكنيكك</h2><p class="csub">اختياري · طريقتين: مباشر وانت تتمرن، لو تحليل فيديو</p></div>
     ${c.err ? `<p class="cerr" role="alert">${c.err}</p>` : ''}
-    ${!CAM_LIVE ? `<p class="cerr">الكاميرا ما تشتغل داخل هذا الرابط. افتح الموقع العام وجربها من هناك.</p><a class="go" href="${PUBLIC_URL}" target="_blank" rel="noopener">افتح الموقع العام</a>`
-      : c.step === 'load' ? '<button class="go" disabled>جاري فتح الكاميرا وتحميل الفاحص…</button>'
-      : `<button class="go" data-c="start">${CAMICO}افتح الكاميرا</button><p class="whint">أول مرة يحمّل الفاحص (حوالي 9 ميغا)، وبعدها يفتح بسرعة.</p>`}
+    ${ways}
+    <div class="csec"><h3>شلون تصوّر</h3><ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>ابدأ من وضعية البداية واثبت لحظة قبل أول عدّة.</span></li></ol></div>
+    <div class="csec"><h3>شنو يفحص بهذا التمرين</h3><ul class="meta">${labels.map(l => `<li>${l}</li>`).join('')}<li>عدّ العدّات</li><li>السرعة</li></ul></div>
+    <p class="cnote"><b>صارم:</b> يكول «صح» بس إذا العدّة كاملة ونظيفة. أي حركة مو حركة التمرين يكلك «ما حسبتها» وما يعدّها.</p>
+    ${c.K.beta ? '<p class="cnote">هذا التمرين فحصه <b>تجريبي</b> لأن جسمك متمدد والكاميرا تشوفه أصعب. إذا طلعت النتيجة غريبة لا تعتمد عليها.</p>' : ''}
+    <p class="cnote"><b>خصوصيتك:</b> الصورة والفيديو يبقون بتلفونك. ما ينرفعون لأي مكان، ويتمسحون من تسكّر هذي الصفحة.</p>
+    <p class="cnote"><b>هذا مساعد مو مدرب.</b> يفحص الزوايا والمدى والسرعة، وما يشوف تقوّس الظهر. إذا حسّيت بألم وكّف.</p>
   </article></div>`;
   el.scrollTop = 0;
 }
@@ -1462,17 +1783,25 @@ document.addEventListener('click', e => {
   const o = e.target.closest('[data-cam]');
   if (o) return camOpen(o.dataset.cam);
   const b = e.target.closest('#cam [data-c]');
-  if (!b || !C) return;
+  if (!b || !C || b.tagName === 'INPUT') return;
   const a = b.dataset.c;
   if (a === 'close') camClose();
   else if (a === 'start' || a === 'again') camStart();
   else if (a === 'end') camEnd();
   else if (a === 'flip') camFlip();
+  else if (a === 'report') { if (C.recBlob) camAnalyze(C.recBlob); }
+  else if (a === 'cancel') { anaDrop(C); C.step = 'intro'; camRender(); }
+  else if (a === 'play') camPlay(b.dataset.i);
+  else if (a === 'unplay') camUnplay();
   else if (a === 'sound') { C.sound = !C.sound; save(K_CAM, {sound:C.sound}); b.setAttribute('aria-pressed', C.sound); if (!C.sound) try { speechSynthesis.cancel(); } catch (err) {} }
+});
+document.addEventListener('change', e => {
+  const i = e.target.closest('#cam input[data-c="file"]');
+  if (i && C && i.files && i.files[0]) camAnalyze(i.files[0]);
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden && C && C.step === 'live') camEnd(); });
 window.addEventListener('pagehide', () => { if (C) camStop(C); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && C) camClose(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && C) { if (!camUnplay()) camClose(); } });
 function start(hot) {
   const s = session();
   sel = hot && WK[hot.sel] ? hot.sel : s ? s.w : (nextUp() || 'UA');
