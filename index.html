@@ -21,6 +21,7 @@
   --hero:#14213d; --hero-ink:#f4f6fb; --hero-muted:#a9b5d2; --hero-line:#2c3c63; --hero-pad:#506190; --hero-mus:#ff7a66; --hero-accent:#86a5ff; --hero-ok:#6fdc9a;
   --fig:#1b2231; --fig-far:#a2aabb; --prop:#8a93a6; --prop-soft:#cfd5df; --pad:#b3bbca;
   --cam-bg:#06080d; --cam-ink:#f5f7fb; --cam-muted:#b4bccd; --cam-glass:rgba(12,16,26,.74); --cam-shade:rgba(4,6,10,.8); --cam-ok:#178a4a; --cam-okline:#5fe39a; --cam-bad:#f0a030; --cam-bad-ink:#1c1300; --cam-line:#8ad4ff;
+  --m-body:#e2e6ed; --m-idle:#cbd2dd; --m-edge:#aab3c2; --m-fib:rgba(60,70,92,.28); --m-s:#f4b6a9; --m-p-edge:#9e2a1a; --m-p-fib:rgba(80,8,0,.38);
   --font-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,system-ui,sans-serif;
   --font-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
 }
@@ -31,6 +32,7 @@
     --accent:#6f93ff; --accent-ink:#0a0f1d;
     --mus:#ff6f5a; --ok:#4cc27d; --hero:#19233f;
     --fig:#e1e6ef; --fig-far:#566073; --prop:#6b7487; --prop-soft:#2f3644; --pad:#465063;
+    --m-body:#232935; --m-idle:#353e4e; --m-edge:#4d586d; --m-fib:rgba(220,230,255,.16); --m-s:#83403a; --m-p-edge:#ffb4a7; --m-p-fib:rgba(255,232,226,.4);
     color-scheme:dark;
   }
 }
@@ -40,6 +42,7 @@
   --accent:#6f93ff; --accent-ink:#0a0f1d;
   --mus:#ff6f5a; --ok:#4cc27d; --hero:#19233f;
   --fig:#e1e6ef; --fig-far:#566073; --prop:#6b7487; --prop-soft:#2f3644; --pad:#465063;
+  --m-body:#232935; --m-idle:#353e4e; --m-edge:#4d586d; --m-fib:rgba(220,230,255,.16); --m-s:#83403a; --m-p-edge:#ffb4a7; --m-p-fib:rgba(255,232,226,.4);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -251,6 +254,32 @@ a.go{text-decoration:none}
 .cmsg.skip{background:var(--cam-glass);color:var(--cam-muted);box-shadow:inset 0 0 0 2px var(--cam-muted)}
 .cend{grid-column:1/-1;min-height:50px;border:0;border-radius:14px;background:var(--cam-ink);color:var(--cam-bg);font-family:var(--font-display);font-weight:600;font-size:16px}
 
+.musmap{display:grid;gap:10px;padding:14px;border-radius:16px;background:var(--surface-2)}
+.musmap h3{font-size:15px}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:stretch}
+.mzs{display:flex;gap:8px;min-width:0}
+.mrow.two{grid-template-columns:minmax(0,1fr)}
+.mz{flex:1 1 0;min-width:0;margin:0;padding:8px 6px 6px;border-radius:12px;background:var(--surface);display:grid;gap:4px;align-content:start}
+.mz .mmap{width:100%;height:auto;max-height:240px;display:block}
+.mz figcaption{font-size:12px;color:var(--muted);text-align:center}
+.mmini{display:flex;gap:2px;align-items:center;padding:6px 4px;border-radius:12px;background:var(--surface)}
+.mmini .mmap{width:40px;height:auto;display:block}
+.mmap .mb{fill:var(--m-body)}
+.mmap .mi{fill:var(--m-idle);stroke:var(--m-edge);stroke-width:.7}
+.mmap .ms{fill:var(--m-s);stroke:var(--m-edge);stroke-width:.7}
+.mmap .mp{fill:var(--mus);stroke:var(--m-p-edge);stroke-width:.8}
+.mmap .mf{fill:none;stroke:var(--m-fib);stroke-width:.7;stroke-linecap:round}
+.mmap .mpf{stroke:var(--m-p-fib)}
+.mkey{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.mkey li{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--surface);font-size:13px}
+.mkey li.p{font-weight:600}
+.mkey i,.mlegend i{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.mkey .p i,.mlegend i.p{background:var(--mus)}
+.mkey .s i,.mlegend i.s{background:var(--m-s)}
+.mkey .s{color:var(--muted)}
+.mlegend{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.mlegend span{display:inline-flex;align-items:center;gap:6px}
+.howto .musmap{margin-top:8px}
 @media (min-width:640px){
   #app{padding-block:28px 56px}
   #home{gap:20px}
@@ -777,7 +806,8 @@ function setOpen(i) {
     qs('.row', li).setAttribute('aria-expanded', on);
     more.hidden = !on;
     const e = EX[WK[sel].slots[+li.dataset.i].ex];
-    more.innerHTML = on ? `<div class="big">${figSVG(e.fig, reduceMotion ? 1 : 0, 'رسمة ' + e.n)}</div>${howHTML(e)}${camBtn(WK[sel].slots[+li.dataset.i].ex)}` : '';
+    const k = WK[sel].slots[+li.dataset.i].ex;
+    more.innerHTML = on ? `<div class="big">${figSVG(e.fig, reduceMotion ? 1 : 0, 'رسمة ' + e.n)}</div>${musHTML(k)}${howHTML(e)}${camBtn(k)}` : '';
   });
   watch(qs('#home'));
 }
@@ -915,7 +945,7 @@ function renderPlay() {
       ${hint ? `<p class="whint">${hint}</p>` : ''}
       <button class="go" data-a="set">${CHECK}خلصت المجموعة ${P.set + 1}</button>
       ${camBtn(sl.ex)}
-      <details class="howto"><summary>شلون أسويه؟${CHEV}</summary>${howHTML(e)}</details>
+      <details class="howto"><summary>شلون أسويه وشنو يشتغل؟${CHEV}</summary>${musHTML(sl.ex)}${howHTML(e)}</details>
       <p class="pnav"><button class="link" data-a="prev"${P.i ? '' : ' disabled'}>التمرين السابق</button><button class="link" data-a="skip">تخطي هذا التمرين</button></p></article>`;
   }
   watch(el);
@@ -963,6 +993,94 @@ qs('#play').addEventListener('click', e => {
   window.scrollTo(0, 0);
 });
 
+/* ---------- muscle map: which muscle (and which part of it) each exercise works ---------- */
+/* Hand-drawn anatomy, right half only; the left half is the same shapes mirrored. viewBox 0 0 200 480. */
+const MNAME = {chest_u:'الصدر العلوي', chest_m:'الصدر الوسطي والسفلي', delt_f:'الكتف الأمامي', delt_s:'الكتف الجانبي', delt_r:'الكتف الخلفي',
+  biceps:'البايسبس', triceps:'الترايسبس', forearm:'الساعد', traps:'الترابيس', upback:'وسط الظهر', lats:'عرض الظهر (اللاتس)', lowback:'أسفل الظهر',
+  abs:'عضلات البطن', obl:'جوانب البطن', quads:'الفخذ الأمامي', add:'الفخذ الداخلي', glutes:'المؤخرة', hams:'الفخذ الخلفي', calves:'السمانة'};
+const BODY = 'M99,58 L110,58 C111,66 112,72 115,76 C124,80 138,82 150,86 C162,90 168,100 168,114 C169,128 170,142 170,154 C171,170 171,184 172,194 C177,208 180,226 179,244 C178,258 176,268 175,276 C179,284 180,298 175,306 C171,310 165,308 164,300 C163,292 163,284 164,276 C161,262 157,244 155,228 C153,214 151,204 150,196 C148,180 147,164 147,150 C146,140 144,134 142,130 C142,150 140,170 138,190 C137,204 137,214 138,222 C141,236 145,250 146,264 C147,280 147,300 145,318 C143,338 140,356 137,370 C136,380 137,388 139,398 C143,412 144,428 141,444 C139,454 137,462 138,468 C142,472 145,478 141,481 L117,481 C115,476 117,470 119,464 C120,450 118,432 117,418 C116,404 116,392 115,382 C113,362 111,340 108,318 C106,302 104,292 99,286 Z';
+/* [muscle, outline, fibre lines] */
+const MFRONT = [
+  ['traps', 'M112,68 C116,76 126,81 146,86 C134,88 122,88 114,86 C112,80 112,74 112,68Z', ''],
+  ['chest_u', 'M101,90 C114,88 128,87 138,90 C141,96 143,104 145,112 C130,108 115,107 101,110Z', 'M104,94 Q124,93 140,102 M104,100 Q124,99 142,107 M104,105 Q124,104 143,110'],
+  ['chest_m', 'M101,110 C115,107 130,108 145,112 C147,120 147,128 145,134 C139,142 128,148 116,149 C108,150 103,147 101,143Z', 'M104,116 Q125,115 145,118 M104,124 Q125,124 146,123 M104,132 Q125,132 145,128 M107,140 Q126,139 143,132'],
+  ['delt_f', 'M136,92 C140,87 146,86 151,87 C154,104 157,126 158,150 C152,140 148,130 145,122 C141,112 137,102 136,96Z', 'M142,92 Q149,116 154,142 M139,98 Q144,114 149,132'],
+  ['delt_s', 'M151,87 C160,89 167,98 169,110 C170,124 166,138 158,150 C157,126 154,104 151,87Z', 'M157,94 Q163,116 160,142'],
+  ['biceps', 'M152,142 C160,144 167,156 168,170 C169,182 165,192 160,196 C155,192 152,184 151,174 C149,162 149,150 152,142Z', 'M158,148 Q162,170 159,192'],
+  ['forearm', 'M155,200 C164,200 172,210 176,226 C179,242 178,258 176,270 C172,273 168,272 166,266 C163,248 159,230 156,216 C154,208 154,203 155,200Z', 'M161,206 Q171,232 172,266'],
+  ['abs', 'M101,152 C109,151 116,152 120,155 C121,180 121,206 119,230 C116,242 109,252 101,256Z', 'M101,174 Q111,172 120,174 M101,196 Q111,194 121,196 M101,216 Q110,214 120,216'],
+  ['obl', 'M123,156 C130,158 136,166 137,180 C138,198 138,214 138,222 C134,236 127,248 121,256 C122,226 123,190 123,156Z', 'M127,168 Q133,200 128,244'],
+  ['quads', 'M118,266 C131,262 143,266 146,280 C148,302 145,326 140,348 C137,360 134,370 130,376 C126,368 123,356 122,344 C118,318 115,290 118,266Z M112,322 C119,326 124,340 126,356 C126,366 122,374 117,372 C113,364 110,350 110,336 C110,328 111,324 112,322Z', 'M130,270 Q135,318 130,368 M139,278 Q143,308 138,344'],
+  ['add', 'M102,280 C108,274 114,270 117,266 C116,292 114,312 112,322 C107,310 103,296 102,280Z', 'M106,282 Q110,296 112,314'],
+  ['calves', 'M117,398 C123,402 127,414 127,426 C127,440 123,450 119,456 C118,442 117,426 117,412Z M131,400 C138,408 142,422 140,438 C139,448 137,454 135,458 C133,442 131,422 131,400Z', '']
+];
+const MBACK = [
+  ['traps', 'M99,60 L110,60 C111,70 116,77 126,81 C136,84 146,86 152,89 C142,96 130,104 121,116 C114,130 107,150 99,176Z', 'M112,70 Q132,84 148,90 M104,92 Q118,102 128,106 M102,124 Q110,122 117,122'],
+  ['upback', 'M121,118 C128,108 138,104 144,108 C146,118 145,128 141,138 C134,142 126,148 118,154 C118,140 118,128 121,118Z', 'M124,120 Q134,113 143,111 M120,138 Q132,131 142,125'],
+  ['lats', 'M117,156 C127,150 136,144 142,136 C142,156 141,176 140,194 C139,208 138,218 137,226 C126,230 112,232 100,232 C101,212 106,184 117,156Z', 'M137,146 Q122,186 104,222 M141,168 Q128,202 114,230'],
+  ['lowback', 'M100,184 C106,184 110,188 112,196 C114,212 114,232 112,248 C108,250 104,250 100,248Z', 'M106,192 Q108,220 106,246'],
+  ['delt_r', 'M141,94 C151,90 161,95 165,106 C167,118 165,130 160,142 C153,134 147,124 143,114 C140,106 140,100 141,94Z', 'M145,99 Q154,118 159,138'],
+  ['delt_s', 'M153,89 C162,92 168,102 169,114 C169,126 166,138 160,146 C165,130 164,112 153,89Z', ''],
+  ['triceps', 'M148,132 C157,132 165,142 168,156 C170,170 169,184 165,194 C159,194 154,188 152,180 C149,166 147,148 148,132Z', 'M158,136 Q162,164 160,192'],
+  ['forearm', 'M154,200 C163,200 171,210 175,226 C178,242 178,258 176,270 C172,273 168,272 166,266 C163,248 159,230 156,216 C154,208 153,203 154,200Z', 'M160,206 Q170,234 171,266'],
+  ['glutes', 'M100,252 C112,246 128,246 139,254 C146,262 147,276 143,290 C137,300 125,305 112,304 C106,303 102,300 100,296Z', 'M106,262 Q126,268 142,286 M104,278 Q120,286 134,300'],
+  ['hams', 'M107,308 C117,305 129,305 140,308 C145,324 144,344 139,362 C135,371 129,376 123,374 C118,362 112,348 109,334 C107,324 106,314 107,308Z', 'M124,310 Q126,342 125,372'],
+  ['calves', 'M117,388 C126,383 136,385 141,396 C144,408 143,424 139,436 C135,444 130,448 126,448 C121,440 118,426 117,412 C116,402 116,394 117,388Z', 'M128,390 Q129,418 128,444']
+];
+/* p = main muscles, s = helpers */
+const EXM = {
+  bench:{p:['chest_m','chest_u'], s:['delt_f','triceps']}, inclinedb:{p:['chest_u'], s:['chest_m','delt_f','triceps']}, dbfly:{p:['chest_m','chest_u'], s:['delt_f']},
+  dbrow:{p:['lats','upback'], s:['delt_r','biceps','traps']}, csrow:{p:['upback','lats'], s:['delt_r','traps','biceps']}, cablerow:{p:['upback','lats'], s:['delt_r','biceps']},
+  pulldown:{p:['lats'], s:['upback','biceps','delt_r']}, pullup:{p:['lats'], s:['upback','biceps','forearm','abs']},
+  dbpress:{p:['delt_f','delt_s'], s:['triceps','traps']}, latraise:{p:['delt_s'], s:['traps']}, cablelat:{p:['delt_s'], s:['traps']},
+  facepull:{p:['delt_r','upback'], s:['traps']}, shrug:{p:['traps'], s:['forearm']},
+  ohtri_cable:{p:['triceps'], s:[]}, ohtri_db:{p:['triceps'], s:[]},
+  bbcurl:{p:['biceps'], s:['forearm']}, preacher:{p:['biceps'], s:['forearm']}, inclinecurl:{p:['biceps'], s:['forearm']}, bayes:{p:['biceps'], s:['forearm']}, hammer:{p:['forearm','biceps'], s:[]},
+  squat:{p:['quads','glutes'], s:['add','lowback']}, smithsq:{p:['quads'], s:['glutes','add']}, goblet:{p:['quads'], s:['glutes','abs']}, bulgarian:{p:['quads','glutes'], s:['add','hams']},
+  rdl:{p:['hams','glutes'], s:['lowback']}, seatcurl:{p:['hams'], s:['calves']}, legext:{p:['quads'], s:[]}, hipthrust:{p:['glutes'], s:['hams']},
+  smithcalf:{p:['calves'], s:[]}, dbcalf:{p:['calves'], s:[]}, cablecrunch:{p:['abs'], s:['obl']}, legraise:{p:['abs'], s:['obl']}
+};
+function mBox(d) {   // rough box from the path's points (control points included)
+  const n = d.match(/-?\d+(\.\d+)?/g).map(Number);
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
+  return [x0, y0, x1, y1];
+}
+function mLayer(set, use, fibres) {
+  const half = set.map(([id, d, f]) => {
+    const c = use.p.includes(id) ? 'mp' : use.s.includes(id) ? 'ms' : 'mi';
+    return `<path class="${c}" d="${d}"/>${fibres && f ? `<path class="mf ${c}f" d="${f}"/>` : ''}`;
+  }).join('');
+  return `<g>${half}</g><g transform="translate(200 0) scale(-1 1)">${half}</g>`;
+}
+function mBody(set, use, vb, fibres, label) {
+  return `<svg class="mmap" viewBox="${vb}" role="img" aria-label="${label}"><path class="mb" d="${BODY}"/><path class="mb" transform="translate(200 0) scale(-1 1)" d="${BODY}"/><ellipse class="mb" cx="100" cy="34" rx="20" ry="25"/>${mLayer(set, use, fibres)}</svg>`;
+}
+function musHTML(key) {
+  const use = EXM[key];
+  if (!use) return '';
+  const views = [['front', MFRONT, 'من كدام'], ['back', MBACK, 'من ورا']].map(([v, set, nm]) => ({v, set, nm, on:set.filter(([id]) => use.p.includes(id))}));
+  // zoom the view that shows most of the main muscles; add the other view only for main muscles it alone shows
+  const back = ['calves', 'triceps', 'hams', 'glutes', 'lats', 'upback', 'delt_r'];   // muscles that read better from behind
+  const score = x => x.on.length + (x.v === 'back' ? x.on.filter(([id]) => back.includes(id)).length * .5 : 0);
+  const first = views.slice().sort((a, b) => score(b) - score(a))[0], other = views.find(x => x !== first);
+  const zv = [first].concat(other.on.some(([id]) => !first.on.some(([j]) => j === id)) ? [other] : []);
+  const zoom = zv.map(({set, nm, on}) => {
+    let x0 = 1e9, x1 = 0, y0 = 1e9, y1 = 0;
+    on.forEach(([, d]) => { const b = mBox(d); x0 = Math.min(x0, b[0]); x1 = Math.max(x1, b[2]); y0 = Math.min(y0, b[1]); y1 = Math.max(y1, b[3]); });
+    const one = x0 > 128;                                  // arm or shoulder: show one side, big
+    let w = one ? x1 - x0 + 28 : Math.max(2 * (x1 - 100) + 28, 96), h = Math.max(y1 - y0 + 28, 84);
+    if (w < h * .9) w = h * .9; else if (h < w * .8) h = w * .8;
+    const cx = one ? (x0 + x1) / 2 : 100, cy = (y0 + y1) / 2, vb = [cx - w / 2, cy - h / 2, w, h].map(n => Math.round(n)).join(' ');
+    return `<figure class="mz">${mBody(set, use, vb, true, 'العضلة ' + nm)}<figcaption>${nm}</figcaption></figure>`;
+  }).join('');
+  const mini = zv.length > 1 ? '' : `<div class="mmini">${views.map(({set, nm}) => mBody(set, use, '0 0 200 482', false, 'الجسم كله ' + nm)).join('')}</div>`;
+  const chip = (ids, c) => ids.map(id => `<li class="${c}"><i></i>${MNAME[id]}</li>`).join('');
+  return `<section class="musmap" aria-label="العضلات اللي تشتغل"><h3>العضلات اللي تشتغل</h3>
+    <div class="mrow${mini ? '' : ' two'}"><div class="mzs">${zoom}</div>${mini}</div>
+    <ul class="mkey">${chip(use.p, 'p')}${chip(use.s, 's')}</ul>
+    <p class="mlegend"><span><i class="p"></i>أساسية</span>${use.s.length ? '<span><i class="s"></i>تساعد</span>' : ''}</p></section>`;
+}
 /* ---------- camera form check (optional) ---------- */
 /* Pose landmarks come from MediaPipe on the phone itself; nothing is uploaded or stored. The rules below only look at joint angles and range of motion. */
 /* cam-engine */
