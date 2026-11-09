@@ -248,6 +248,7 @@ a.go{text-decoration:none}
 .cmsg{min-height:80px;display:flex;align-items:center;padding:10px 14px;border-radius:16px;background:var(--cam-glass);font-family:var(--font-display);font-weight:600;font-size:clamp(19px,5.4vw,30px);line-height:1.3;text-wrap:balance}
 .cmsg.ok{background:var(--cam-ok);font-size:clamp(30px,9vw,44px)}
 .cmsg.bad{background:var(--cam-bad);color:var(--cam-bad-ink)}
+.cmsg.skip{background:var(--cam-glass);color:var(--cam-muted);box-shadow:inset 0 0 0 2px var(--cam-muted)}
 .cend{grid-column:1/-1;min-height:50px;border:0;border-radius:14px;background:var(--cam-ink);color:var(--cam-bg);font-family:var(--font-display);font-weight:600;font-size:16px}
 
 @media (min-width:640px){
@@ -976,78 +977,129 @@ function sideM(p, s, need) {
   const I = PTS[s], S = p[I.s], E = p[I.e], W = p[I.w], H = p[I.h], K = p[I.k], A = p[I.a];
   let vis = 1;
   for (const c of NEED[need]) vis = Math.min(vis, p[I[c]].v);
+  const tl = Math.hypot(S.x - H.x, S.y - H.y) || 1;                            // torso length: the ruler for distances
   return {vis,
     elbow: ang3(S, E, W), knee: ang3(H, K, A), hip: ang3(S, H, K), abd: ang3(H, S, E),
     lean: Math.atan2(S.x - H.x, H.y - S.y) * DEG,                               // torso away from upright
     thigh: H.y >= K.y ? 0 : Math.atan2(K.y - H.y, Math.abs(K.x - H.x)) * DEG,   // 0 = thigh level with the floor
     arm: Math.atan2(E.x - S.x, E.y - S.y) * DEG,                                // upper arm, measured from hanging down
-    armUp: Math.atan2(E.x - S.x, S.y - E.y) * DEG};                             // upper arm, measured from straight up
+    armUp: Math.atan2(E.x - S.x, S.y - E.y) * DEG,                              // upper arm, measured from straight up
+    hipY: H.y / tl, ankY: A.y / tl,                                             // heights, in torso lengths (down = bigger)
+    wrY: (S.y - W.y) / tl, elbY: (S.y - E.y) / tl, fore: (E.y - W.y) / tl};     // wrist / elbow above the shoulder, wrist above the elbow
 }
 function frameM(p, K, T) {
   const L = sideM(p, 'l', K.need), R = sideM(p, 'r', K.need);
+  let m;
   if (K.mode === 'near') {
     const cur = T.side === 'l' ? L : R, oth = T.side === 'l' ? R : L;
     if (!T.side || oth.vis > cur.vis + .15) T.side = L.vis >= R.vis ? 'l' : 'r';
-    return T.side === 'l' ? L : R;
+    m = T.side === 'l' ? L : R;
+  } else if (L.vis < SEEN || R.vis < SEEN) m = L.vis >= R.vis ? L : R;
+  else if (K.mode === 'lead') m = L.abd >= R.abd ? L : R;
+  else { m = {}; for (const k in L) m[k] = (L[k] + R[k]) / 2; m.vis = Math.min(L.vis, R.vis); }
+  if (K.mode !== 'near') {
+    const sx = (p[11].x + p[12].x) / 2, sy = (p[11].y + p[12].y) / 2, hx = (p[23].x + p[24].x) / 2, hy = (p[23].y + p[24].y) / 2;
+    m.lean = Math.atan2(sx - hx, hy - sy) * DEG;
   }
-  if (L.vis < SEEN || R.vis < SEEN) return L.vis >= R.vis ? L : R;
-  if (K.mode === 'lead') return L.abd >= R.abd ? L : R;
-  const m = {};
-  for (const k in L) m[k] = (L[k] + R[k]) / 2;
-  m.vis = Math.min(L.vis, R.vis);
+  m.sym = K.mode === 'both' && L.vis >= SEEN && R.vis >= SEEN ? Math.abs(L.elbow - R.elbow) : 0;   // two-arm moves: both arms bend together
+  const tl = (Math.hypot(p[11].x - p[23].x, p[11].y - p[23].y) + Math.hypot(p[12].x - p[24].x, p[12].y - p[24].y)) / 2 || 1;
+  m.wide = Math.hypot(p[11].x - p[12].x, p[11].y - p[12].y) / tl;               // ~0.2 side-on, ~0.8 facing the camera
   return m;
 }
 const span = (R, k) => R.max[k] - R.min[k];
-const FAST = {l:'السرعة', bad:R => R.dur < 700, msg:'سريع هواي — تحكّم بالوزن', say:'أبطأ شوية'};
+const tilt = R => Math.max(Math.abs(R.min.lean), Math.abs(R.max.lean));
+const flat = R => R.min.lean * R.max.lean > 0 ? Math.min(Math.abs(R.min.lean), Math.abs(R.max.lean)) : 0;
+const SIDE = m => m.wide > .5 ? 'لف جنبك للكاميرا' : null;
+const FACE = m => m.wide < .55 ? 'قابل الكاميرا بوجهك' : null;
+const STAND = m => Math.abs(m.lean) > 25 ? 'وكف عدل' : null;
+const NOT = 'ما حسبتها — هاي مو حركة التمرين';
+const FAST = {l:'السرعة', bad:R => R.full < 800, msg:'سريع هواي — نزّل على مهلك', say:'أبطأ شوية'};
+/* pose: start position (and camera side) that must be held before a rep counts.
+   keep: what every real rep of this exercise does; a move that breaks it is not counted at all.
+   checks: the first one that fails is the correction; a rep is صح only when none fails. */
 const KINDS = {
-  squat:{view:'side', need:'leg', mode:'near', prim:'knee', dir:-1, enter:140, exit:156, checks:[
-    {l:'العمق', bad:R => R.min.thigh > 22, msg:'انزل أكثر — فخذك يوصل موازي للأرض', say:'انزل أكثر'},
-    {l:'ميلان الصدر', bad:R => Math.max(Math.abs(R.min.lean), Math.abs(R.max.lean)) > 60, msg:'صدرك نازل لكدام هواي — ارفع صدرك', say:'ارفع صدرك'}]},
-  hinge:{view:'side', need:'leg', mode:'near', prim:'hip', dir:-1, enter:150, exit:163, checks:[
-    {l:'ثنية الركبة', bad:R => R.min.knee < 120, msg:'ركبتك تنثني هواي — ادفع وركك لورا', say:'ادفع وركك لورا'},
-    {l:'النزول', bad:R => R.min.hip > 120, msg:'انزل أكثر — لحد ما تحس الشد بالفخذ الخلفي', say:'انزل أكثر'}]},
-  curl:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:110, exit:125, checks:[
-    {l:'تمرجح الظهر', bad:R => span(R, 'lean') > 15, msg:'لا تتمرجح بظهرك — خفّف الوزن إذا لازم', say:'لا تتمرجح'},
-    {l:'ثبات الكوع', bad:R => span(R, 'arm') > 35, msg:'كوعك يتحرك — ثبّته بمكانه', say:'ثبّت كوعك'},
-    {l:'الرفعة للآخر', bad:R => R.min.elbow > 65, msg:'ارفع للآخر واعصر فوك', say:'ارفع أكثر'},
-    {l:'النزلة للآخر', bad:R => R.max.elbow < 145, msg:'نزّل للآخر — افرد إيدك', say:'نزّل للآخر'}]},
-  triext:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:120, exit:140, checks:[
-    {l:'ثبات الكوع', bad:R => span(R, 'armUp') > 35, msg:'كوعك يتحرك — بس الساعد يتحرك', say:'ثبّت كوعك'},
-    {l:'المطّة ورا الراس', bad:R => R.min.elbow > 80, msg:'نزّل أكثر ورا راسك', say:'نزّل أكثر'},
-    {l:'الفردة للآخر', bad:R => R.max.elbow < 150, msg:'افرد إيدك للآخر فوك', say:'افرد إيدك'}]},
-  press:{view:'front', need:'arm', mode:'both', prim:'elbow', dir:1, enter:130, exit:115, checks:[
-    {l:'الدفعة للآخر', bad:R => R.max.elbow < 150, msg:'ادفع لفوك للآخر', say:'ادفع للآخر'},
-    {l:'النزلة', bad:R => R.min.elbow > 105, msg:'نزّل أكثر — الدمبل لمستوى إذنك', say:'نزّل أكثر'}]},
-  bench:{view:'bench', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:125, exit:145, beta:1, checks:[
-    {l:'النزلة للصدر', bad:R => R.min.elbow > 100, msg:'نزّل للآخر — لحد صدرك', say:'نزّل للآخر'},
-    {l:'الفردة فوك', bad:R => R.max.elbow < 150, msg:'افرد إيدك فوك', say:'افرد إيدك'}]},
-  raise:{view:'front', need:'arm', mode:'lead', prim:'abd', dir:1, enter:45, exit:30, checks:[
-    {l:'تمرجح الجسم', bad:R => span(R, 'lean') > 14, msg:'لا تتمرجح بجسمك — خفّف الوزن', say:'لا تتمرجح'},
-    {l:'ارتفاع الإيد', bad:R => R.max.abd > 112, msg:'لا ترفع فوك مستوى الكتف', say:'لا ترفع هواي'},
-    {l:'ارتفاع الإيد', bad:R => R.max.abd < 68, msg:'ارفع أكثر — لمستوى الكتف', say:'ارفع أكثر'},
-    {l:'ثنية الكوع', bad:R => R.min.elbow < 105, msg:'كوعك مثني هواي — افرده شوية', say:'افرد كوعك شوية'}]},
-  pull:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140, checks:[
-    {l:'السحبة للآخر', bad:R => R.min.elbow > 85, msg:'اسحب أكثر — لحد أعلى صدرك', say:'اسحب أكثر'},
-    {l:'المطّة فوك', bad:R => R.max.elbow < 150, msg:'رجّع البار للآخر وافرد إيدك', say:'افرد إيدك فوك'}]},
-  pullup:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140, checks:[
-    {l:'الرفعة للآخر', bad:R => R.min.elbow > 85, msg:'ارفع أكثر — ذقنك فوك البار', say:'ارفع أكثر'},
-    {l:'النزلة للآخر', bad:R => R.max.elbow < 150, msg:'انزل للآخر وافرد إيدك', say:'انزل للآخر'}]},
-  legext:{view:'side', need:'knee', mode:'near', prim:'knee', dir:1, enter:125, exit:110, checks:[
-    {l:'الفردة للآخر', bad:R => R.max.knee < 155, msg:'افرد رجلك للآخر واعصر', say:'افرد رجلك'},
+  squat:{view:'side', need:'leg', mode:'near', prim:'knee', dir:-1, enter:140, exit:156,
+    pose:m => SIDE(m) || STAND(m) || (m.knee < 155 || m.hip < 155 ? 'وكف عدل وابدأ من فوك' : null),
+    keep:R => span(R, 'ankY') > .2 || span(R, 'hipY') < .12 || tilt(R) > 80 ? NOT : null, checks:[
+    {l:'العمق', bad:R => R.min.thigh > 18, msg:'انزل أكثر — فخذك يوصل موازي للأرض', say:'انزل أكثر'},
+    {l:'ميلان الصدر', bad:R => tilt(R) > 55, msg:'صدرك نازل لكدام هواي — ارفع صدرك', say:'ارفع صدرك'},
+    {l:'الوكفة للآخر', bad:R => R.max.knee < 160 || R.max.hip < 160, msg:'اوكف للآخر فوك قبل العدّة الجاية', say:'اوكف للآخر'}]},
+  hinge:{view:'side', need:'leg', mode:'near', prim:'hip', dir:-1, enter:150, exit:163,
+    pose:m => SIDE(m) || STAND(m) || (m.knee < 155 || m.hip < 155 ? 'وكف عدل وابدأ من فوك' : null),
+    keep:R => span(R, 'ankY') > .2 || span(R, 'lean') < 25 || R.min.knee < 80 ? NOT : null, checks:[
+    {l:'ثنية الركبة', bad:R => R.min.knee < 125, msg:'ركبتك تنثني هواي — ادفع وركك لورا', say:'ادفع وركك لورا'},
+    {l:'النزول', bad:R => R.min.hip > 115, msg:'انزل أكثر — لحد ما تحس الشد بالفخذ الخلفي', say:'انزل أكثر'},
+    {l:'الوكفة للآخر', bad:R => R.max.hip < 162, msg:'اوكف للآخر وعصّر مؤخرتك فوك', say:'اوكف للآخر'}]},
+  curl:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:110, exit:125,
+    pose:m => SIDE(m) || STAND(m) || (Math.abs(m.arm) > 25 || m.elbow < 140 ? 'نزّل إيدك جنبك وابدأ' : null),
+    keep:R => Math.max(Math.abs(R.min.arm), Math.abs(R.max.arm)) > 60 || tilt(R) > 40 || span(R, 'wrY') < .45 ? NOT : null, checks:[
+    {l:'تمرجح الظهر', bad:R => span(R, 'lean') > 12, msg:'لا تتمرجح بظهرك — خفّف الوزن إذا لازم', say:'لا تتمرجح'},
+    {l:'ثبات الكوع', bad:R => span(R, 'arm') > 25, msg:'كوعك يتحرك — ثبّته جنب جسمك', say:'ثبّت كوعك'},
+    {l:'الرفعة للآخر', bad:R => R.min.elbow > 60, msg:'ارفع للآخر واعصر فوك', say:'ارفع أكثر'},
+    {l:'النزلة للآخر', bad:R => R.max.elbow < 150, msg:'نزّل للآخر — افرد إيدك', say:'نزّل للآخر'}]},
+  triext:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:120, exit:140,
+    pose:m => SIDE(m) || (m.elbY < .05 || Math.abs(m.armUp) > 70 ? 'ارفع كوعك فوك جنب راسك وابدأ' : null),
+    keep:R => Math.max(Math.abs(R.min.armUp), Math.abs(R.max.armUp)) > 85 || R.min.elbY < -.1 || span(R, 'wrY') < .3 ? NOT : null, checks:[
+    {l:'ثبات الكوع', bad:R => span(R, 'armUp') > 30, msg:'كوعك يتحرك — بس الساعد يتحرك', say:'ثبّت كوعك'},
+    {l:'المطّة ورا الراس', bad:R => R.min.elbow > 75, msg:'نزّل أكثر ورا راسك', say:'نزّل أكثر'},
+    {l:'الفردة للآخر', bad:R => R.max.elbow < 155, msg:'افرد إيدك للآخر', say:'افرد إيدك'}]},
+  press:{view:'front', need:'arm', mode:'both', prim:'elbow', dir:1, enter:130, exit:115,
+    pose:m => FACE(m) || STAND(m) || (m.fore < .1 || m.elbY < -.45 ? 'ارفع الدمبلات لمستوى كتفك وابدأ' : null),
+    keep:R => tilt(R) > 30 || R.min.fore < -.05 || span(R, 'wrY') < .3 || R.max.sym > 40 ? NOT : null, checks:[
+    {l:'الدفعة للآخر', bad:R => R.max.elbow < 155, msg:'ادفع لفوك للآخر', say:'ادفع للآخر'},
+    {l:'النزلة', bad:R => R.min.elbow > 100, msg:'نزّل أكثر — الدمبل لمستوى إذنك', say:'نزّل أكثر'},
+    {l:'تقوّس الظهر', bad:R => span(R, 'lean') > 12, msg:'لا تقوّس ظهرك لورا — شد بطنك', say:'شد بطنك'}]},
+  bench:{view:'bench', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:125, exit:145, beta:1,
+    pose:m => SIDE(m) || (Math.abs(m.lean) < 35 ? 'تمدد على البنج' : m.wrY < .25 || m.elbow < 140 ? 'افرد إيدك فوك صدرك وابدأ' : null),
+    keep:R => flat(R) < 30 || R.min.fore < -.1 || span(R, 'wrY') < .3 ? NOT : null, checks:[
+    {l:'النزلة للصدر', bad:R => R.min.elbow > 95, msg:'نزّل للآخر — لحد صدرك', say:'نزّل للآخر'},
+    {l:'الفردة فوك', bad:R => R.max.elbow < 155, msg:'افرد إيدك فوك', say:'افرد إيدك'}]},
+  raise:{view:'front', need:'arm', mode:'lead', prim:'abd', dir:1, enter:45, exit:30,
+    pose:m => FACE(m) || STAND(m) || (m.abd > 35 || m.elbow < 120 ? 'نزّل إيدك جنبك وابدأ' : null),
+    keep:R => tilt(R) > 35 || R.min.elbow < 80 ? NOT : null, checks:[
+    {l:'تمرجح الجسم', bad:R => span(R, 'lean') > 12, msg:'لا تتمرجح بجسمك — خفّف الوزن', say:'لا تتمرجح'},
+    {l:'ارتفاع الإيد', bad:R => R.max.abd > 110, msg:'لا ترفع فوك مستوى الكتف', say:'لا ترفع هواي'},
+    {l:'ارتفاع الإيد', bad:R => R.max.abd < 72, msg:'ارفع أكثر — لمستوى الكتف', say:'ارفع أكثر'},
+    {l:'ثنية الكوع', bad:R => R.min.elbow < 110, msg:'كوعك مثني هواي — افرده شوية', say:'افرد كوعك شوية'}]},
+  pull:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140,
+    pose:m => FACE(m) || (m.wrY < .35 || m.elbow < 130 ? 'مسك البار وافرد إيدك فوك وابدأ' : null),
+    keep:R => R.max.wrY < .35 || span(R, 'wrY') < .2 || R.min.fore < -.1 || R.max.sym > 40 ? NOT : null, checks:[
+    {l:'السحبة للآخر', bad:R => R.min.elbow > 80, msg:'اسحب أكثر — لحد أعلى صدرك', say:'اسحب أكثر'},
+    {l:'المطّة فوك', bad:R => R.max.elbow < 155, msg:'رجّع البار للآخر وافرد إيدك', say:'افرد إيدك فوك'}]},
+  pullup:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140,
+    pose:m => FACE(m) || (m.wrY < .35 || m.elbow < 130 ? 'تعلّك بالبار وافرد إيدك وابدأ' : null),
+    keep:R => R.max.wrY < .35 || span(R, 'wrY') < .2 || R.min.fore < -.1 || R.max.sym > 40 ? NOT : null, checks:[
+    {l:'الرفعة للآخر', bad:R => R.min.elbow > 80, msg:'ارفع أكثر — ذقنك فوك البار', say:'ارفع أكثر'},
+    {l:'النزلة للآخر', bad:R => R.max.elbow < 155, msg:'انزل للآخر وافرد إيدك', say:'انزل للآخر'}]},
+  legext:{view:'side', need:'knee', mode:'near', prim:'knee', dir:1, enter:125, exit:110,
+    pose:m => SIDE(m) || (m.thigh > 30 ? 'اكعد على الجهاز' : m.knee > 120 ? 'نزّل رجلك وابدأ' : null),
+    keep:R => R.max.thigh > 35 || span(R, 'hipY') > .2 || span(R, 'ankY') < .25 ? NOT : null, checks:[
+    {l:'الفردة للآخر', bad:R => R.max.knee < 160, msg:'افرد رجلك للآخر واعصر', say:'افرد رجلك'},
     {l:'النزلة', bad:R => R.min.knee > 100, msg:'نزّل للآخر قبل ما ترفع', say:'نزّل للآخر'}]},
-  legcurl:{view:'side', need:'knee', mode:'near', prim:'knee', dir:-1, enter:130, exit:145, checks:[
-    {l:'السحبة للآخر', bad:R => R.min.knee > 90, msg:'اسحب أكثر', say:'اسحب أكثر'},
-    {l:'الرجعة للآخر', bad:R => R.max.knee < 150, msg:'رجّع رجلك للآخر', say:'رجّع للآخر'}]}
+  legcurl:{view:'side', need:'knee', mode:'near', prim:'knee', dir:-1, enter:130, exit:145,
+    pose:m => SIDE(m) || (m.thigh > 30 ? 'اكعد على الجهاز' : m.knee < 135 ? 'افرد رجلك وابدأ' : null),
+    keep:R => R.max.thigh > 35 || span(R, 'hipY') > .2 || span(R, 'ankY') < .25 ? NOT : null, checks:[
+    {l:'السحبة للآخر', bad:R => R.min.knee > 85, msg:'اسحب أكثر', say:'اسحب أكثر'},
+    {l:'الرجعة للآخر', bad:R => R.max.knee < 155, msg:'رجّع رجلك للآخر', say:'رجّع للآخر'}]}
 };
 const CAMEX = {squat:'squat', smithsq:'squat', goblet:'squat', rdl:'hinge', bbcurl:'curl', hammer:'curl', bayes:'curl', inclinecurl:'curl',
   ohtri_cable:'triext', ohtri_db:'triext', dbpress:'press', bench:'bench', inclinedb:'bench', latraise:'raise', cablelat:'raise',
   pulldown:'pull', pullup:'pullup', legext:'legext', seatcurl:'legcurl'};
-function mkTrack(K) { return {K, st:'idle', rep:null, n:0, good:0, faults:{}, side:null, sm:null}; }
-/* One rep = the main angle passes `enter`, comes back past `exit`, then settles (or turns around). Returns a verdict when a rep ends. */
+function mkTrack(K) { return {K, st:'idle', rep:null, n:0, good:0, skip:0, faults:{}, side:null, sm:null, armed:false, okFrom:null, lastOk:-1e9, hint:null}; }
+/* A rep only starts from the start position (held 0.3 s the first time), goes past `enter`, comes back past `exit`,
+   then settles or turns around. Returns {n, fault} for a counted rep, {skip} for a move that isn't the exercise. */
 function feed(T, m, t) {
-  const K = T.K, v = m[K.prim], past = (x, th) => K.dir < 0 ? x < th : x > th;
+  const K = T.K;
+  for (const k in m) if (!isFinite(m[k])) return null;
+  const v = m[K.prim], past = (x, th) => K.dir < 0 ? x < th : x > th, hint = K.pose(m);
+  if (hint) T.okFrom = null;
+  else if (T.armed) T.lastOk = t;
+  else { if (T.okFrom === null) T.okFrom = t; if (t - T.okFrom >= 300) { T.armed = true; T.lastOk = t; } }
   if (T.st === 'idle') {
-    if (!past(v, K.enter)) return null;
+    if (T.armed && t - T.lastOk > 4000) T.armed = false;
+    const ready = T.armed && t - T.lastOk < 1500;
+    T.hint = ready ? null : hint || 'ثبّت لحظة…';
+    if (!ready || !past(v, K.enter)) return null;
     T.st = 'work'; T.rep = {t0:t, min:{}, max:{}};
   }
   const R = T.rep;
@@ -1056,17 +1108,22 @@ function feed(T, m, t) {
     if (R.max[k] === undefined || m[k] > R.max[k]) R.max[k] = m[k];
   }
   if (T.st === 'work') {
-    if (!past(v, K.exit)) { T.st = 'tail'; R.t1 = R.t2 = t; R.ext = v; }
+    if (t - R.t0 > 15000) { T.st = 'idle'; T.rep = null; return null; }
+    if (!past(v, K.exit)) { T.st = 'tail'; R.t1 = R.t2 = t; R.ext = R.t2v = v; R.path = []; }
     return null;
   }
-  if (K.dir < 0 ? v > R.ext + 1 : v < R.ext - 1) { R.ext = v; R.t2 = t; }
+  R.path.push(t, v);
+  if (K.dir < 0 ? v > R.ext : v < R.ext) { if (Math.abs(v - R.ext) > .3 && Math.abs(v - R.t2v) > 3) { R.t2 = t; R.t2v = v; } R.ext = v; }   // jitter of a degree or two doesn't count as still moving
   const back = K.dir < 0 ? v < R.ext - 6 : v > R.ext + 6;
   if (!back && t - R.t2 < 600) return null;
   T.st = 'idle'; T.rep = null;
   R.dur = R.t1 - R.t0;
+  for (let i = 0; i < R.path.length; i += 2) if (Math.abs(R.path[i + 1] - R.ext) < 8) { R.full = R.path[i] - R.t0; break; }   // time until the rep is (nearly) back at the start
   if (R.dur < 250) return null;
+  const no = R.min.vis < .6 ? 'ما حسبتها — ما شفتك زين، خلّي جسمك كله يبين' : K.keep(R);
+  if (no) { T.skip++; return {n:T.n, skip:no}; }
   const f = K.checks.concat(FAST).find(c => c.bad(R)) || null;
-  T.n++;
+  T.n++; T.lastOk = t;
   if (f) T.faults[f.msg] = (T.faults[f.msg] || 0) + 1; else T.good++;
   return {n:T.n, fault:f};
 }
@@ -1168,14 +1225,14 @@ async function camFlip() {
   } catch (e) { if (C === c) camEnd(); }
   c.busy = false;
 }
-function camSay(t, ok) {
+function camSay(t, tone) {
   if (!C || !C.sound) return;
   try {
     const ss = window.speechSynthesis, vo = ss && ss.getVoices().find(v => /^ar/i.test(v.lang));
     if (vo) { ss.cancel(); const u = new SpeechSynthesisUtterance(t); u.voice = vo; u.lang = vo.lang; u.rate = 1.1; ss.speak(u); return; }
   } catch (e) {}
   try {
-    if (actx) (ok ? [[1040, 0]] : [[330, 0], [330, .22]]).forEach(([hz, dt]) => {
+    if (actx) (tone === 'ok' ? [[1040, 0]] : tone === 'skip' ? [[520, 0]] : [[330, 0], [330, .22]]).forEach(([hz, dt]) => {
       const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + dt;
       o.frequency.value = hz;
       g.gain.setValueAtTime(.0001, t0);
@@ -1208,20 +1265,23 @@ function camFrame(lm, w, h, now) {
     if (m.vis < SEEN) m = null;
   }
   if (!m) {
-    if (now - c.seen > 1200) { c.T.st = 'idle'; c.T.rep = null; c.T.sm = null; c.ready = false; camMsg(c.seen ? 'ما أشوفك كلك — ارجع لورا شوية' : 'وكف بمكانك لحد ما أشوفك'); }
+    if (now - c.seen > 1200) { c.T.st = 'idle'; c.T.rep = null; c.T.sm = null; c.T.armed = false; c.T.okFrom = null; camMsg(c.seen ? 'ما أشوفك كلك — ارجع لورا شوية' : 'وكف بمكانك لحد ما أشوفك'); }
     return;
   }
   c.seen = now;
   const s = c.T.sm;
   if (!s) c.T.sm = Object.assign({}, m); else for (const k in m) s[k] += (m[k] - s[k]) * .5;
-  if (!c.ready) { c.ready = true; camMsg('شايفك — ابدأ'); }
   const ev = feed(c.T, c.T.sm, now);
-  if (!ev) return;
+  if (!ev) {
+    if (c.T.st === 'idle' && now > c.holdTo) camMsg(c.T.hint || 'جاهز — ابدأ');
+    return;
+  }
+  c.holdTo = now + 2000; c.msg = '';
+  if (ev.skip) { camMsg(ev.skip, 'skip'); camSay('ما حسبتها', 'skip'); return; }
   qs('#cn').textContent = ev.n;
   c.flash = ev.fault ? c.col.bad : c.col.ok; c.flashTo = now + 900;
-  c.msg = '';
   camMsg(ev.fault ? ev.fault.msg : 'صح', ev.fault ? 'bad' : 'ok');
-  camSay(ev.fault ? ev.fault.say : String(ev.n), !ev.fault);
+  camSay(ev.fault ? ev.fault.say : String(ev.n), ev.fault ? 'bad' : 'ok');
 }
 function camLoop() {
   const c = C;
@@ -1246,7 +1306,7 @@ function camRender() {
       <div class="cbot"><div class="creps"><b id="cn" lang="en">${c.T.n}</b><small>عدّة</small></div><p class="cmsg" id="cmsg" role="status"></p><button class="cend" data-c="end">خلصت المجموعة</button></div>`;
     const cs = getComputedStyle(el), col = n => cs.getPropertyValue(n).trim();
     c.col = {line:col('--cam-line'), ok:col('--cam-okline'), bad:col('--cam-bad')};
-    c.video = qs('#cvid'); c.canvas = qs('#ccan'); c.vt = -1; c.flashTo = 0; c.ready = false;
+    c.video = qs('#cvid'); c.canvas = qs('#ccan'); c.vt = -1; c.flashTo = 0; c.holdTo = 0;
     c.video.srcObject = c.stream;
     c.video.play().catch(() => {});
     camMsg('وكف بمكانك لحد ما أشوفك');
@@ -1255,18 +1315,20 @@ function camRender() {
   }
   if (c.step === 'sum') {
     const T = c.T, fl = Object.keys(T.faults).sort((a, b) => T.faults[b] - T.faults[a]);
+    const sk = T.skip ? `<p class="cnote"><b lang="en">${T.skip}</b> ${T.skip === 1 ? 'حركة' : 'حركات'} ما حسبتها لأن ما طلعت حركة التمرين، لو ما شفتك زين.</p>` : '';
     el.innerHTML = `<div class="cwrap">${bar}<article class="pcard fin">${!T.n
-      ? `<div><h2>ما عدّيت ولا عدّة</h2></div><p class="tip">تأكد التلفون يشوفك <b>${V.b}</b> وجسمك كله بالصورة، وجرب مرة ثانية.</p>`
+      ? `<div><h2>ما عدّيت ولا عدّة</h2></div>${sk}<p class="tip">تأكد التلفون يشوفك <b>${V.b}</b> وجسمك كله بالصورة، وابدأ كل عدّة من وضعية البداية.</p>`
       : `${fl.length ? '' : `<div class="done">${CHECK}</div>`}<div><h2><span lang="en">${T.good}</span> من <span lang="en">${T.n}</span> صح</h2><p class="rnext">${e.n}</p></div>
         ${fl.length ? `<ul class="cfl">${fl.map(f => `<li><span>${f}</span><b lang="en" dir="ltr">${T.faults[f]}×</b></li>`).join('')}</ul><p class="tip">بالمجموعة الجاية ركّز على <b>أول ملاحظة</b> بس. وحدة وحدة تتصلح.</p>`
-          : '<p class="tip">كل العدّات نظيفة. إذا كمّلت العدّات المطلوبة، زيد الوزن شوية المرة الجاية.</p>'}`}
+          : '<p class="tip">كل العدّات نظيفة. إذا كمّلت العدّات المطلوبة، زيد الوزن شوية المرة الجاية.</p>'}${sk}`}
       <button class="go" data-c="again">${CAMICO}افحص مجموعة ثانية</button><button class="ghost" data-c="close">رجوع</button></article></div>`;
     return;
   }
   const labels = c.K.checks.map(k => k.l).filter((l, i, a) => a.indexOf(l) === i);
   el.innerHTML = `<div class="cwrap">${bar}<article class="pcard">
     <div class="ptitle"><h2>خلّي الكاميرا تشوف تكنيكك</h2><p class="csub">اختياري · يعدّ عدّاتك ويكلك بعد كل عدّة: صح، لو شنو تعدّل</p></div>
-    <ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>سنّد التلفون واكف وعدل، وعلّي الصوت حتى تسمع الملاحظة وانت تتمرن.</span></li></ol>
+    <ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>خذ وضعية البداية واثبت لحظة لحد ما يكلك <b>جاهز</b>، وعلّي الصوت حتى تسمع الملاحظة وانت تتمرن.</span></li></ol>
+    <p class="cnote"><b>صارم:</b> يكول «صح» بس إذا العدّة كاملة ونظيفة. أي حركة مو حركة التمرين يكلك «ما حسبتها» وما يعدّها.</p>
     <div class="csec"><h3>شنو يفحص بهذا التمرين</h3><ul class="meta">${labels.map(l => `<li>${l}</li>`).join('')}<li>عدّ العدّات</li></ul></div>
     ${c.K.beta ? '<p class="cnote">هذا التمرين فحصه <b>تجريبي</b> لأن جسمك متمدد والكاميرا تشوفه أصعب. إذا طلعت النتيجة غريبة لا تعتمد عليها.</p>' : ''}
     <p class="cnote"><b>خصوصيتك:</b> الصورة تبقى بتلفونك. ما تنرفع لأي مكان وما تنحفظ.</p>
@@ -1293,7 +1355,6 @@ document.addEventListener('click', e => {
 document.addEventListener('visibilitychange', () => { if (document.hidden && C && C.step === 'live') camEnd(); });
 window.addEventListener('pagehide', () => { if (C) camStop(C); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && C) camClose(); });
-
 function start(hot) {
   const s = session();
   sel = hot && WK[hot.sel] ? hot.sel : s ? s.w : (nextUp() || 'UA');
