@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="كورس تضخيم 4 تمارين بالأسبوع: رسمة متحركة لكل تمرين، وضع تمرين يعدّ المجاميع ويحسب الراحة، ويحفظ أوزانك.">
+<meta name="description" content="كورس تضخيم 4 تمارين بالأسبوع: رسمة متحركة لكل تمرين، وضع تمرين يعدّ المجاميع ويحسب الراحة، ويحفظ أوزانك، وفحص تكنيك اختياري بالكاميرا.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%232357d1'/%3E%3Cpath d='M4 10v4M7 7v10M17 7v10M20 10v4M7 12h10' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>كورس التضخيم</title>
@@ -20,6 +20,7 @@
   --mus:#d8452f; --ok:#1c8a4d;
   --hero:#14213d; --hero-ink:#f4f6fb; --hero-muted:#a9b5d2; --hero-line:#2c3c63; --hero-pad:#506190; --hero-mus:#ff7a66; --hero-accent:#86a5ff; --hero-ok:#6fdc9a;
   --fig:#1b2231; --fig-far:#a2aabb; --prop:#8a93a6; --prop-soft:#cfd5df; --pad:#b3bbca;
+  --cam-bg:#06080d; --cam-ink:#f5f7fb; --cam-muted:#b4bccd; --cam-glass:rgba(12,16,26,.74); --cam-shade:rgba(4,6,10,.8); --cam-ok:#178a4a; --cam-okline:#5fe39a; --cam-bad:#f0a030; --cam-bad-ink:#1c1300; --cam-line:#8ad4ff;
   --font-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,system-ui,sans-serif;
   --font-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
 }
@@ -208,6 +209,47 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tip{font-size:14px;color:var(--muted);max-width:36ch}
 .tip b{color:var(--ink);font-family:var(--font-display);font-weight:600}
 
+/* camera check: an opt-in full-screen layer. Intro and result use the page theme; the live view is always dark over the video. */
+.camgo{display:flex;align-items:center;gap:10px;width:100%;min-height:50px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);font-weight:600;font-size:14.5px;text-align:start}
+.camgo .cam{width:22px;height:22px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.camgo small{margin-inline-start:auto;font-weight:500;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--surface);white-space:nowrap}
+.more .camgo{margin-top:12px;background:var(--surface)}
+.go .cam{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+a.go{text-decoration:none}
+.go:disabled{opacity:.6;cursor:default}
+#cam{position:fixed;inset:0;z-index:20;overflow:auto;background:var(--bg);padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.cwrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.csp{width:40px}
+.csub{font-size:13.5px;color:var(--muted)}
+.csec h3{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px}
+.cnote{font-size:13.5px;color:var(--muted)}
+.cnote b{color:var(--ink);font-weight:600}
+.cerr{font-size:14px;font-weight:600;color:var(--mus);background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.cfl{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:8px;text-align:start}
+.cfl li{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:14.5px}
+.cfl span{min-width:0}
+.cfl b{font-family:var(--font-display);font-weight:600;font-variant-numeric:tabular-nums;color:var(--mus)}
+#cam .fin .go,#cam .fin .ghost{width:100%}
+#cam.live{padding:0;overflow:hidden;background:var(--cam-bg);color:var(--cam-ink)}
+.cview{position:absolute;inset:0}
+.cview video,.cview canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.cview.mir video,.cview.mir canvas{transform:scaleX(-1)}
+.ctop{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 22px max(16px,env(safe-area-inset-left,0px));background:linear-gradient(var(--cam-shade),transparent)}
+.cname{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.cname b{font-family:var(--font-display);font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cname small{font-size:12.5px;color:var(--cam-muted)}
+.cbtn{width:44px;height:44px;flex:none;border:0;border-radius:50%;background:var(--cam-glass);color:var(--cam-ink);display:grid;place-items:center}
+.cbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cbtn[aria-pressed="false"]{opacity:.5}
+.cbot{position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:stretch;padding:28px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,var(--cam-shade) 40%)}
+.creps{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:80px;padding:8px 10px;border-radius:16px;background:var(--cam-glass)}
+.creps b{font-family:var(--font-display);font-weight:700;font-size:50px;line-height:1;font-variant-numeric:tabular-nums}
+.creps small{font-size:12px;color:var(--cam-muted)}
+.cmsg{min-height:80px;display:flex;align-items:center;padding:10px 14px;border-radius:16px;background:var(--cam-glass);font-family:var(--font-display);font-weight:600;font-size:clamp(19px,5.4vw,30px);line-height:1.3;text-wrap:balance}
+.cmsg.ok{background:var(--cam-ok);font-size:clamp(30px,9vw,44px)}
+.cmsg.bad{background:var(--cam-bad);color:var(--cam-bad-ink)}
+.cend{grid-column:1/-1;min-height:50px;border:0;border-radius:14px;background:var(--cam-ink);color:var(--cam-bg);font-family:var(--font-display);font-weight:600;font-size:16px}
+
 @media (min-width:640px){
   #app{padding-block:28px 56px}
   #home{gap:20px}
@@ -280,6 +322,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     </section>
   </div>
   <div id="play" hidden></div>
+  <div id="cam" hidden></div>
 </div>
 
 <script>
@@ -733,7 +776,7 @@ function setOpen(i) {
     qs('.row', li).setAttribute('aria-expanded', on);
     more.hidden = !on;
     const e = EX[WK[sel].slots[+li.dataset.i].ex];
-    more.innerHTML = on ? `<div class="big">${figSVG(e.fig, reduceMotion ? 1 : 0, 'رسمة ' + e.n)}</div>${howHTML(e)}` : '';
+    more.innerHTML = on ? `<div class="big">${figSVG(e.fig, reduceMotion ? 1 : 0, 'رسمة ' + e.n)}</div>${howHTML(e)}${camBtn(WK[sel].slots[+li.dataset.i].ex)}` : '';
   });
   watch(qs('#home'));
 }
@@ -810,6 +853,7 @@ function startWorkout(w, from) {
   window.scrollTo(0, 0);
 }
 function exitPlay() {
+  camClose();
   clearInterval(tick); tick = null;
   unwake();
   if (P && P.phase === 'done') sel = nextUp() || sel;
@@ -869,6 +913,7 @@ function renderPlay() {
         <div class="stepper"><button data-a="w-" aria-label="نقّص الوزن">−</button><input id="wt" lang="en" dir="ltr" type="number" inputmode="decimal" min="0" max="500" step="0.5" placeholder="—" value="${lw ? lw.w : ''}"><button data-a="w+" aria-label="زيّد الوزن">+</button></div></div>
       ${hint ? `<p class="whint">${hint}</p>` : ''}
       <button class="go" data-a="set">${CHECK}خلصت المجموعة ${P.set + 1}</button>
+      ${camBtn(sl.ex)}
       <details class="howto"><summary>شلون أسويه؟${CHEV}</summary>${howHTML(e)}</details>
       <p class="pnav"><button class="link" data-a="prev"${P.i ? '' : ' disabled'}>التمرين السابق</button><button class="link" data-a="skip">تخطي هذا التمرين</button></p></article>`;
   }
@@ -916,6 +961,338 @@ qs('#play').addEventListener('click', e => {
   renderPlay();
   window.scrollTo(0, 0);
 });
+
+/* ---------- camera form check (optional) ---------- */
+/* Pose landmarks come from MediaPipe on the phone itself; nothing is uploaded or stored. The rules below only look at joint angles and range of motion. */
+/* cam-engine */
+const DEG = 180 / Math.PI, SEEN = .5;
+const PTS = {l:{s:11, e:13, w:15, h:23, k:25, a:27}, r:{s:12, e:14, w:16, h:24, k:26, a:28}};
+const NEED = {arm:'sewh', leg:'shka', knee:'hka'};
+function ang3(a, b, c) {
+  const ux = a.x - b.x, uy = a.y - b.y, vx = c.x - b.x, vy = c.y - b.y, d = Math.hypot(ux, uy) * Math.hypot(vx, vy);
+  return d ? Math.acos(Math.max(-1, Math.min(1, (ux * vx + uy * vy) / d))) * DEG : 180;
+}
+function sideM(p, s, need) {
+  const I = PTS[s], S = p[I.s], E = p[I.e], W = p[I.w], H = p[I.h], K = p[I.k], A = p[I.a];
+  let vis = 1;
+  for (const c of NEED[need]) vis = Math.min(vis, p[I[c]].v);
+  return {vis,
+    elbow: ang3(S, E, W), knee: ang3(H, K, A), hip: ang3(S, H, K), abd: ang3(H, S, E),
+    lean: Math.atan2(S.x - H.x, H.y - S.y) * DEG,                               // torso away from upright
+    thigh: H.y >= K.y ? 0 : Math.atan2(K.y - H.y, Math.abs(K.x - H.x)) * DEG,   // 0 = thigh level with the floor
+    arm: Math.atan2(E.x - S.x, E.y - S.y) * DEG,                                // upper arm, measured from hanging down
+    armUp: Math.atan2(E.x - S.x, S.y - E.y) * DEG};                             // upper arm, measured from straight up
+}
+function frameM(p, K, T) {
+  const L = sideM(p, 'l', K.need), R = sideM(p, 'r', K.need);
+  if (K.mode === 'near') {
+    const cur = T.side === 'l' ? L : R, oth = T.side === 'l' ? R : L;
+    if (!T.side || oth.vis > cur.vis + .15) T.side = L.vis >= R.vis ? 'l' : 'r';
+    return T.side === 'l' ? L : R;
+  }
+  if (L.vis < SEEN || R.vis < SEEN) return L.vis >= R.vis ? L : R;
+  if (K.mode === 'lead') return L.abd >= R.abd ? L : R;
+  const m = {};
+  for (const k in L) m[k] = (L[k] + R[k]) / 2;
+  m.vis = Math.min(L.vis, R.vis);
+  return m;
+}
+const span = (R, k) => R.max[k] - R.min[k];
+const FAST = {l:'السرعة', bad:R => R.dur < 700, msg:'سريع هواي — تحكّم بالوزن', say:'أبطأ شوية'};
+const KINDS = {
+  squat:{view:'side', need:'leg', mode:'near', prim:'knee', dir:-1, enter:140, exit:156, checks:[
+    {l:'العمق', bad:R => R.min.thigh > 22, msg:'انزل أكثر — فخذك يوصل موازي للأرض', say:'انزل أكثر'},
+    {l:'ميلان الصدر', bad:R => Math.max(Math.abs(R.min.lean), Math.abs(R.max.lean)) > 60, msg:'صدرك نازل لكدام هواي — ارفع صدرك', say:'ارفع صدرك'}]},
+  hinge:{view:'side', need:'leg', mode:'near', prim:'hip', dir:-1, enter:150, exit:163, checks:[
+    {l:'ثنية الركبة', bad:R => R.min.knee < 120, msg:'ركبتك تنثني هواي — ادفع وركك لورا', say:'ادفع وركك لورا'},
+    {l:'النزول', bad:R => R.min.hip > 120, msg:'انزل أكثر — لحد ما تحس الشد بالفخذ الخلفي', say:'انزل أكثر'}]},
+  curl:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:110, exit:125, checks:[
+    {l:'تمرجح الظهر', bad:R => span(R, 'lean') > 15, msg:'لا تتمرجح بظهرك — خفّف الوزن إذا لازم', say:'لا تتمرجح'},
+    {l:'ثبات الكوع', bad:R => span(R, 'arm') > 35, msg:'كوعك يتحرك — ثبّته بمكانه', say:'ثبّت كوعك'},
+    {l:'الرفعة للآخر', bad:R => R.min.elbow > 65, msg:'ارفع للآخر واعصر فوك', say:'ارفع أكثر'},
+    {l:'النزلة للآخر', bad:R => R.max.elbow < 145, msg:'نزّل للآخر — افرد إيدك', say:'نزّل للآخر'}]},
+  triext:{view:'side', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:120, exit:140, checks:[
+    {l:'ثبات الكوع', bad:R => span(R, 'armUp') > 35, msg:'كوعك يتحرك — بس الساعد يتحرك', say:'ثبّت كوعك'},
+    {l:'المطّة ورا الراس', bad:R => R.min.elbow > 80, msg:'نزّل أكثر ورا راسك', say:'نزّل أكثر'},
+    {l:'الفردة للآخر', bad:R => R.max.elbow < 150, msg:'افرد إيدك للآخر فوك', say:'افرد إيدك'}]},
+  press:{view:'front', need:'arm', mode:'both', prim:'elbow', dir:1, enter:130, exit:115, checks:[
+    {l:'الدفعة للآخر', bad:R => R.max.elbow < 150, msg:'ادفع لفوك للآخر', say:'ادفع للآخر'},
+    {l:'النزلة', bad:R => R.min.elbow > 105, msg:'نزّل أكثر — الدمبل لمستوى إذنك', say:'نزّل أكثر'}]},
+  bench:{view:'bench', need:'arm', mode:'near', prim:'elbow', dir:-1, enter:125, exit:145, beta:1, checks:[
+    {l:'النزلة للصدر', bad:R => R.min.elbow > 100, msg:'نزّل للآخر — لحد صدرك', say:'نزّل للآخر'},
+    {l:'الفردة فوك', bad:R => R.max.elbow < 150, msg:'افرد إيدك فوك', say:'افرد إيدك'}]},
+  raise:{view:'front', need:'arm', mode:'lead', prim:'abd', dir:1, enter:45, exit:30, checks:[
+    {l:'تمرجح الجسم', bad:R => span(R, 'lean') > 14, msg:'لا تتمرجح بجسمك — خفّف الوزن', say:'لا تتمرجح'},
+    {l:'ارتفاع الإيد', bad:R => R.max.abd > 112, msg:'لا ترفع فوك مستوى الكتف', say:'لا ترفع هواي'},
+    {l:'ارتفاع الإيد', bad:R => R.max.abd < 68, msg:'ارفع أكثر — لمستوى الكتف', say:'ارفع أكثر'},
+    {l:'ثنية الكوع', bad:R => R.min.elbow < 105, msg:'كوعك مثني هواي — افرده شوية', say:'افرد كوعك شوية'}]},
+  pull:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140, checks:[
+    {l:'السحبة للآخر', bad:R => R.min.elbow > 85, msg:'اسحب أكثر — لحد أعلى صدرك', say:'اسحب أكثر'},
+    {l:'المطّة فوك', bad:R => R.max.elbow < 150, msg:'رجّع البار للآخر وافرد إيدك', say:'افرد إيدك فوك'}]},
+  pullup:{view:'back', need:'arm', mode:'both', prim:'elbow', dir:-1, enter:125, exit:140, checks:[
+    {l:'الرفعة للآخر', bad:R => R.min.elbow > 85, msg:'ارفع أكثر — ذقنك فوك البار', say:'ارفع أكثر'},
+    {l:'النزلة للآخر', bad:R => R.max.elbow < 150, msg:'انزل للآخر وافرد إيدك', say:'انزل للآخر'}]},
+  legext:{view:'side', need:'knee', mode:'near', prim:'knee', dir:1, enter:125, exit:110, checks:[
+    {l:'الفردة للآخر', bad:R => R.max.knee < 155, msg:'افرد رجلك للآخر واعصر', say:'افرد رجلك'},
+    {l:'النزلة', bad:R => R.min.knee > 100, msg:'نزّل للآخر قبل ما ترفع', say:'نزّل للآخر'}]},
+  legcurl:{view:'side', need:'knee', mode:'near', prim:'knee', dir:-1, enter:130, exit:145, checks:[
+    {l:'السحبة للآخر', bad:R => R.min.knee > 90, msg:'اسحب أكثر', say:'اسحب أكثر'},
+    {l:'الرجعة للآخر', bad:R => R.max.knee < 150, msg:'رجّع رجلك للآخر', say:'رجّع للآخر'}]}
+};
+const CAMEX = {squat:'squat', smithsq:'squat', goblet:'squat', rdl:'hinge', bbcurl:'curl', hammer:'curl', bayes:'curl', inclinecurl:'curl',
+  ohtri_cable:'triext', ohtri_db:'triext', dbpress:'press', bench:'bench', inclinedb:'bench', latraise:'raise', cablelat:'raise',
+  pulldown:'pull', pullup:'pullup', legext:'legext', seatcurl:'legcurl'};
+function mkTrack(K) { return {K, st:'idle', rep:null, n:0, good:0, faults:{}, side:null, sm:null}; }
+/* One rep = the main angle passes `enter`, comes back past `exit`, then settles (or turns around). Returns a verdict when a rep ends. */
+function feed(T, m, t) {
+  const K = T.K, v = m[K.prim], past = (x, th) => K.dir < 0 ? x < th : x > th;
+  if (T.st === 'idle') {
+    if (!past(v, K.enter)) return null;
+    T.st = 'work'; T.rep = {t0:t, min:{}, max:{}};
+  }
+  const R = T.rep;
+  for (const k in m) {
+    if (R.min[k] === undefined || m[k] < R.min[k]) R.min[k] = m[k];
+    if (R.max[k] === undefined || m[k] > R.max[k]) R.max[k] = m[k];
+  }
+  if (T.st === 'work') {
+    if (!past(v, K.exit)) { T.st = 'tail'; R.t1 = R.t2 = t; R.ext = v; }
+    return null;
+  }
+  if (K.dir < 0 ? v > R.ext + 1 : v < R.ext - 1) { R.ext = v; R.t2 = t; }
+  const back = K.dir < 0 ? v < R.ext - 6 : v > R.ext + 6;
+  if (!back && t - R.t2 < 600) return null;
+  T.st = 'idle'; T.rep = null;
+  R.dur = R.t1 - R.t0;
+  if (R.dur < 250) return null;
+  const f = K.checks.concat(FAST).find(c => c.bad(R)) || null;
+  T.n++;
+  if (f) T.faults[f.msg] = (T.faults[f.msg] || 0) + 1; else T.good++;
+  return {n:T.n, fault:f};
+}
+/* cam-ui */
+const CAM_LIVE = /*CAM_LIVE*/true;
+const PUBLIC_URL = 'https://soso694201.github.io/gym-course/';
+const MP = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const MODEL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+const K_CAM = 'bulk-course.cam';
+const CAMICO = '<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+const FLIPICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/></svg>';
+const SNDICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>';
+const BONES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
+const VIEW = {
+  side:{b:'من الجنب', t:'حط التلفون على جانبك، مو كدامك', far:'ابعد 2 إلى 3 متر لحد ما يبين جسمك كله، من راسك لرجلك'},
+  front:{b:'من كدام', t:'حط التلفون كدامك ووجهك عليه', far:'ابعد حوالي 2 متر لحد ما يبين من راسك لركبتك وإيدك وهي مفتوحة'},
+  back:{b:'من كدام أو من ورا', t:'حط التلفون كدامك أو وراك بالنص', far:'ابعد حوالي 2 متر لحد ما تبين إيدك وهي مفرودة فوك'},
+  bench:{b:'من الجنب', t:'حط التلفون على جانب البنج وبارتفاع البنج تقريباً', far:'ابعد حوالي 2 متر لحد ما يبين جسمك كله وانت متمدد'}
+};
+let C = null, poseP = null;
+const camBtn = k => CAMEX[k] ? `<button class="camgo" data-cam="${k}">${CAMICO}<span>افحص تكنيكي بالكاميرا</span><small>اختياري</small></button>` : '';
+function loadPose() {
+  if (!poseP) poseP = (async () => {
+    const v = await import(MP + '/vision_bundle.mjs');
+    const fs = await v.FilesetResolver.forVisionTasks(MP + '/wasm');
+    const mk = d => v.PoseLandmarker.createFromOptions(fs, {baseOptions:{modelAssetPath:MODEL, delegate:d}, runningMode:'VIDEO', numPoses:1});
+    try { return await mk('GPU'); } catch (e) { return await mk('CPU'); }
+  })().catch(e => { poseP = null; throw e; });
+  return poseP;
+}
+function camStop(c) {
+  cancelAnimationFrame(c.raf);
+  try { if (c.stream) c.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+  try { if (c.lock) c.lock.release(); } catch (e) {}
+  try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
+  c.stream = c.lock = null;
+}
+function camOpen(ex) {
+  if (!CAMEX[ex] || !EX[ex]) return;
+  const pref = load(K_CAM, {});
+  C = {ex, K:KINDS[CAMEX[ex]], step:'intro', err:'', face:'user', sound:pref.sound !== false, back:document.activeElement};
+  qs('#cam').hidden = false;
+  camRender();
+}
+function camClose() {
+  if (!C) return;
+  const b = C.back;
+  camStop(C); C = null;
+  const el = qs('#cam');
+  el.hidden = true; el.className = ''; el.innerHTML = '';
+  try { if (b && b.isConnected) b.focus(); } catch (e) {}
+}
+function camStream(c) {
+  return navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:c.face, width:{ideal:640}, height:{ideal:480}}});
+}
+async function camStart() {
+  const c = C;
+  if (!c || c.step === 'load') return;
+  c.step = 'load'; c.err = ''; camRender();
+  try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = actx || new AC(); if (actx.state === 'suspended') actx.resume(); } } catch (e) {}
+  try { if (window.speechSynthesis) { speechSynthesis.getVoices(); speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } } catch (e) {}
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw {name:'NotFoundError'};
+    c.stream = await camStream(c);
+    if (C !== c) return camStop(c);
+    c.pose = await loadPose();
+    if (C !== c) return camStop(c);
+  } catch (e) {
+    const perm = e && (e.name === 'NotAllowedError' || e.name === 'SecurityError'), none = e && (e.name === 'NotFoundError' || e.name === 'OverconstrainedError' || e.name === 'NotReadableError');
+    const got = !!c.stream;
+    camStop(c);
+    if (C !== c) return;
+    c.step = 'intro';
+    c.err = perm ? 'الكاميرا ما انطت إذن. اسمح للموقع بالكاميرا من إعدادات المتصفح وجرب مرة ثانية.' : none && !got ? 'ما لكيت كاميرا تشتغل بهذا الجهاز.' : 'ما كدرت أحمّل الفاحص. تأكد من النت وجرب مرة ثانية.';
+    return camRender();
+  }
+  try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (C === c && c.stream) c.lock = l; else l.release(); }).catch(() => {}); } catch (e) {}
+  c.step = 'live'; c.T = mkTrack(c.K); c.seen = 0; c.msg = '';
+  camRender();
+}
+function camEnd() {
+  if (!C || C.step !== 'live') return;
+  camStop(C);
+  C.step = 'sum';
+  camRender();
+}
+async function camFlip() {
+  const c = C;
+  if (!c || c.step !== 'live' || c.busy) return;
+  c.busy = true;
+  c.face = c.face === 'user' ? 'environment' : 'user';
+  try {
+    if (c.stream) c.stream.getTracks().forEach(t => t.stop());
+    c.stream = await camStream(c);
+    if (C !== c || c.step !== 'live') return camStop(c);
+    c.video.srcObject = c.stream;
+    c.video.play().catch(() => {});
+    qs('#cam .cview').classList.toggle('mir', c.face === 'user');
+  } catch (e) { if (C === c) camEnd(); }
+  c.busy = false;
+}
+function camSay(t, ok) {
+  if (!C || !C.sound) return;
+  try {
+    const ss = window.speechSynthesis, vo = ss && ss.getVoices().find(v => /^ar/i.test(v.lang));
+    if (vo) { ss.cancel(); const u = new SpeechSynthesisUtterance(t); u.voice = vo; u.lang = vo.lang; u.rate = 1.1; ss.speak(u); return; }
+  } catch (e) {}
+  try {
+    if (actx) (ok ? [[1040, 0]] : [[330, 0], [330, .22]]).forEach(([hz, dt]) => {
+      const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + dt;
+      o.frequency.value = hz;
+      g.gain.setValueAtTime(.0001, t0);
+      g.gain.exponentialRampToValueAtTime(.3, t0 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, t0 + .16);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t0); o.stop(t0 + .18);
+    });
+  } catch (e) {}
+}
+function camMsg(text, cls) {
+  if (C.msg === text) return;
+  C.msg = text;
+  const el = qs('#cmsg');
+  if (el) { el.textContent = text; el.className = 'cmsg' + (cls ? ' ' + cls : ''); }
+}
+function camFrame(lm, w, h, now) {
+  const c = C, cv = c.canvas;
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+  const g = cv.getContext('2d');
+  g.clearRect(0, 0, w, h);
+  let m = null;
+  if (lm) {
+    const p = lm.map(q => ({x:q.x * w, y:q.y * h, v:q.x < -.02 || q.x > 1.02 || q.y < -.02 || q.y > 1.02 ? 0 : q.visibility === undefined ? 1 : q.visibility}));
+    m = frameM(p, c.K, c.T);
+    g.lineWidth = Math.max(3, w / 110); g.lineCap = 'round';
+    g.strokeStyle = g.fillStyle = now < c.flashTo ? c.flash : c.col.line;
+    BONES.forEach(([a, b]) => { if (p[a].v > .4 && p[b].v > .4) { g.beginPath(); g.moveTo(p[a].x, p[a].y); g.lineTo(p[b].x, p[b].y); g.stroke(); } });
+    [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28].forEach(i => { if (p[i].v > .4) { g.beginPath(); g.arc(p[i].x, p[i].y, g.lineWidth * 1.1, 0, 7); g.fill(); } });
+    if (m.vis < SEEN) m = null;
+  }
+  if (!m) {
+    if (now - c.seen > 1200) { c.T.st = 'idle'; c.T.rep = null; c.T.sm = null; c.ready = false; camMsg(c.seen ? 'ما أشوفك كلك — ارجع لورا شوية' : 'وكف بمكانك لحد ما أشوفك'); }
+    return;
+  }
+  c.seen = now;
+  const s = c.T.sm;
+  if (!s) c.T.sm = Object.assign({}, m); else for (const k in m) s[k] += (m[k] - s[k]) * .5;
+  if (!c.ready) { c.ready = true; camMsg('شايفك — ابدأ'); }
+  const ev = feed(c.T, c.T.sm, now);
+  if (!ev) return;
+  qs('#cn').textContent = ev.n;
+  c.flash = ev.fault ? c.col.bad : c.col.ok; c.flashTo = now + 900;
+  c.msg = '';
+  camMsg(ev.fault ? ev.fault.msg : 'صح', ev.fault ? 'bad' : 'ok');
+  camSay(ev.fault ? ev.fault.say : String(ev.n), !ev.fault);
+}
+function camLoop() {
+  const c = C;
+  if (!c || c.step !== 'live') return;
+  const v = c.video, now = performance.now();
+  if (v.readyState >= 2 && v.videoWidth && v.currentTime !== c.vt) {
+    c.vt = v.currentTime;
+    let lm = null;
+    try { const r = c.pose.detectForVideo(v, now); lm = r && r.landmarks && r.landmarks[0]; } catch (e) {}
+    camFrame(lm, v.videoWidth, v.videoHeight, now);
+  }
+  c.raf = requestAnimationFrame(camLoop);
+}
+function camRender() {
+  const c = C, el = qs('#cam'), e = EX[c.ex], V = VIEW[c.K.view];
+  const bar = `<div class="pbar"><button class="x" data-c="close" aria-label="رجوع">${XICO}</button><span class="pcount">فحص التكنيك · <b>${e.n}</b></span><span class="csp"></span></div>`;
+  el.className = c.step === 'live' ? 'live' : '';
+  if (c.step === 'live') {
+    el.innerHTML = `<div class="cview${c.face === 'user' ? ' mir' : ''}"><video id="cvid" playsinline muted autoplay></video><canvas id="ccan"></canvas></div>
+      <div class="ctop"><button class="cbtn" data-c="close" aria-label="سكّر الكاميرا">${XICO}</button><p class="cname"><b>${e.n}</b><small>الفحص ${V.b}</small></p>
+        <button class="cbtn" data-c="sound" aria-pressed="${c.sound}" aria-label="الصوت">${SNDICO}</button><button class="cbtn" data-c="flip" aria-label="بدّل الكاميرا">${FLIPICO}</button></div>
+      <div class="cbot"><div class="creps"><b id="cn" lang="en">${c.T.n}</b><small>عدّة</small></div><p class="cmsg" id="cmsg" role="status"></p><button class="cend" data-c="end">خلصت المجموعة</button></div>`;
+    const cs = getComputedStyle(el), col = n => cs.getPropertyValue(n).trim();
+    c.col = {line:col('--cam-line'), ok:col('--cam-okline'), bad:col('--cam-bad')};
+    c.video = qs('#cvid'); c.canvas = qs('#ccan'); c.vt = -1; c.flashTo = 0; c.ready = false;
+    c.video.srcObject = c.stream;
+    c.video.play().catch(() => {});
+    camMsg('وكف بمكانك لحد ما أشوفك');
+    c.raf = requestAnimationFrame(camLoop);
+    return;
+  }
+  if (c.step === 'sum') {
+    const T = c.T, fl = Object.keys(T.faults).sort((a, b) => T.faults[b] - T.faults[a]);
+    el.innerHTML = `<div class="cwrap">${bar}<article class="pcard fin">${!T.n
+      ? `<div><h2>ما عدّيت ولا عدّة</h2></div><p class="tip">تأكد التلفون يشوفك <b>${V.b}</b> وجسمك كله بالصورة، وجرب مرة ثانية.</p>`
+      : `${fl.length ? '' : `<div class="done">${CHECK}</div>`}<div><h2><span lang="en">${T.good}</span> من <span lang="en">${T.n}</span> صح</h2><p class="rnext">${e.n}</p></div>
+        ${fl.length ? `<ul class="cfl">${fl.map(f => `<li><span>${f}</span><b lang="en" dir="ltr">${T.faults[f]}×</b></li>`).join('')}</ul><p class="tip">بالمجموعة الجاية ركّز على <b>أول ملاحظة</b> بس. وحدة وحدة تتصلح.</p>`
+          : '<p class="tip">كل العدّات نظيفة. إذا كمّلت العدّات المطلوبة، زيد الوزن شوية المرة الجاية.</p>'}`}
+      <button class="go" data-c="again">${CAMICO}افحص مجموعة ثانية</button><button class="ghost" data-c="close">رجوع</button></article></div>`;
+    return;
+  }
+  const labels = c.K.checks.map(k => k.l).filter((l, i, a) => a.indexOf(l) === i);
+  el.innerHTML = `<div class="cwrap">${bar}<article class="pcard">
+    <div class="ptitle"><h2>خلّي الكاميرا تشوف تكنيكك</h2><p class="csub">اختياري · يعدّ عدّاتك ويكلك بعد كل عدّة: صح، لو شنو تعدّل</p></div>
+    <ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>سنّد التلفون واكف وعدل، وعلّي الصوت حتى تسمع الملاحظة وانت تتمرن.</span></li></ol>
+    <div class="csec"><h3>شنو يفحص بهذا التمرين</h3><ul class="meta">${labels.map(l => `<li>${l}</li>`).join('')}<li>عدّ العدّات</li></ul></div>
+    ${c.K.beta ? '<p class="cnote">هذا التمرين فحصه <b>تجريبي</b> لأن جسمك متمدد والكاميرا تشوفه أصعب. إذا طلعت النتيجة غريبة لا تعتمد عليها.</p>' : ''}
+    <p class="cnote"><b>خصوصيتك:</b> الصورة تبقى بتلفونك. ما تنرفع لأي مكان وما تنحفظ.</p>
+    <p class="cnote"><b>هذا مساعد مو مدرب.</b> يفحص الزوايا والمدى بس، وما يشوف تقوّس الظهر. إذا حسّيت بألم وكّف.</p>
+    ${c.err ? `<p class="cerr" role="alert">${c.err}</p>` : ''}
+    ${!CAM_LIVE ? `<p class="cerr">الكاميرا ما تشتغل داخل هذا الرابط. افتح الموقع العام وجربها من هناك.</p><a class="go" href="${PUBLIC_URL}" target="_blank" rel="noopener">افتح الموقع العام</a>`
+      : c.step === 'load' ? '<button class="go" disabled>جاري فتح الكاميرا وتحميل الفاحص…</button>'
+      : `<button class="go" data-c="start">${CAMICO}افتح الكاميرا</button><p class="whint">أول مرة يحمّل الفاحص (حوالي 9 ميغا)، وبعدها يفتح بسرعة.</p>`}
+  </article></div>`;
+  el.scrollTop = 0;
+}
+document.addEventListener('click', e => {
+  const o = e.target.closest('[data-cam]');
+  if (o) return camOpen(o.dataset.cam);
+  const b = e.target.closest('#cam [data-c]');
+  if (!b || !C) return;
+  const a = b.dataset.c;
+  if (a === 'close') camClose();
+  else if (a === 'start' || a === 'again') camStart();
+  else if (a === 'end') camEnd();
+  else if (a === 'flip') camFlip();
+  else if (a === 'sound') { C.sound = !C.sound; save(K_CAM, {sound:C.sound}); b.setAttribute('aria-pressed', C.sound); if (!C.sound) try { speechSynthesis.cancel(); } catch (err) {} }
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden && C && C.step === 'live') camEnd(); });
+window.addEventListener('pagehide', () => { if (C) camStop(C); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && C) camClose(); });
 
 function start(hot) {
   const s = session();
