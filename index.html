@@ -287,6 +287,13 @@ a.go{text-decoration:none}
 .copt h3 .cam{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .copt p{font-size:13.5px;color:var(--muted)}
 .cfile{cursor:pointer}
+.soff{display:none}
+[aria-pressed="false"] .son{display:none}
+[aria-pressed="false"] .soff{display:block}
+.cbtn[aria-pressed="false"]{color:var(--cam-bad)}
+.csnd{display:grid;gap:8px}
+.csnd .ghost svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.csnd .soff{display:none}
 #cam .ghost{display:flex;align-items:center;justify-content:center;gap:8px}
 #cam .ghost .cam{width:20px;height:20px;flex:none;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 label.go.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-size:16px}
@@ -914,23 +921,61 @@ qs('#hero').addEventListener('click', e => {
 });
 
 /* ---------- workout mode ---------- */
-let P = null, tick = null, lock = null, actx = null;
+/* ---------- sound ----------
+   On iPhone the ring/silent switch mutes Web Audio, so tones are short WAVs played through <audio>
+   (and the page asks for the "playback" audio session where Safari has it). Each player has to be
+   started once from a tap before the page may play it later on its own: unlockSound() does that. */
+const TONES = {rest:[[880, 0, .2], [880, .3, .2], [880, .6, .2]], ok:[[1040, 0, .16]], bad:[[330, 0, .16], [330, .22, .16]], skip:[[520, 0, .14]]};
+const tonePlayers = {};
+let soundReady = false;
+function wavURL(parts) {
+  const rate = 22050, len = Math.ceil(rate * Math.max(...parts.map(p => p[1] + p[2]))) + 200, b = new DataView(new ArrayBuffer(44 + len * 2));
+  const str = (o, t) => { for (let i = 0; i < t.length; i++) b.setUint8(o + i, t.charCodeAt(i)); };
+  str(0, 'RIFF'); b.setUint32(4, 36 + len * 2, true); str(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true);
+  b.setUint32(24, rate, true); b.setUint32(28, rate * 2, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); str(36, 'data'); b.setUint32(40, len * 2, true);
+  for (let i = 0; i < len; i++) {
+    const t = i / rate; let v = 0;
+    for (const [hz, at, d] of parts) if (t >= at && t < at + d) { const x = t - at; v += Math.sin(2 * Math.PI * hz * x) * Math.min(1, x / .01, (d - x) / .04); }
+    b.setInt16(44 + i * 2, Math.max(-1, Math.min(1, v * .45)) * 32767, true);
+  }
+  return URL.createObjectURL(new Blob([b], {type:'audio/wav'}));
+}
+function unlockSound() {   // call from a tap
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try {
+    for (const k in TONES) {
+      if (tonePlayers[k] && tonePlayers[k].primed) continue;
+      const a = tonePlayers[k] || (tonePlayers[k] = new Audio(wavURL(TONES[k])));
+      a.muted = true; const p = a.play();
+      if (p) p.then(() => { if (a.muted) { a.pause(); a.currentTime = 0; a.muted = false; } a.primed = true; }).catch(() => { a.muted = false; });
+    }
+  } catch (e) {}
+  try { const ss = window.speechSynthesis; if (ss && !soundReady) { ss.getVoices(); const u = new SpeechSynthesisUtterance('.'); u.volume = 0; ss.speak(u); } } catch (e) {}
+  soundReady = true;
+}
+function playTone(k) {
+  try { const a = tonePlayers[k]; if (a) { a.muted = false; a.currentTime = 0; const p = a.play(); if (p) p.catch(() => {}); } } catch (e) {}
+}
+function speak(t) {   // true when an Arabic voice was asked to say it
+  try {
+    const ss = window.speechSynthesis;
+    if (!ss) return false;
+    const vs = ss.getVoices(), vo = vs.find(v => /^ar/i.test(v.lang));
+    if (vs.length && !vo) return false;   // no Arabic voice on this phone: the tones carry the message
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = vo ? vo.lang : 'ar-SA'; if (vo) u.voice = vo; u.rate = 1.05;
+    if (ss.speaking || ss.pending) { ss.cancel(); setTimeout(() => ss.speak(u), 90); } else ss.speak(u);   // iPhone drops a speak() made right after cancel()
+    return true;
+  } catch (e) { return false; }
+}
+
+let P = null, tick = null, lock = null;
 const RING = 2 * Math.PI * 52;
 function wake() { try { if (P && navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { lock = l; }).catch(() => {}); } catch (e) {} }
 function unwake() { try { if (lock) lock.release(); } catch (e) {} lock = null; }
 document.addEventListener('visibilitychange', () => { if (!document.hidden && P && P.phase !== 'done') wake(); });
 function beep() {
-  try {
-    if (actx) [0, .3, .6].forEach(dt => {
-      const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + dt;
-      o.frequency.value = 880;
-      g.gain.setValueAtTime(.0001, t);
-      g.gain.exponentialRampToValueAtTime(.3, t + .02);
-      g.gain.exponentialRampToValueAtTime(.0001, t + .2);
-      o.connect(g); g.connect(actx.destination);
-      o.start(t); o.stop(t + .22);
-    });
-  } catch (e) {}
+  playTone('rest');
   try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {}
 }
 function persist() { if (P && P.phase !== 'done') save(K_SES, {w:P.w, i:P.i, set:P.set, startAt:P.startAt, sets:P.sets, day:P.day}); }
@@ -941,7 +986,7 @@ function setWt(ex, v) {
   return v;
 }
 function startWorkout(w, from) {
-  try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = actx || new AC(); if (actx.state === 'suspended') actx.resume(); } } catch (e) {}
+  unlockSound();
   P = from ? {w:from.w, i:from.i, set:from.set, startAt:from.startAt || Date.now(), sets:from.sets || 0, day:from.day, phase:'work'}
            : {w, i:0, set:0, startAt:Date.now(), sets:0, day:today(), phase:'work'};
   qs('#home').hidden = true;
@@ -1344,7 +1389,7 @@ const K_CAM = 'bulk-course.cam';
 const CAMICO = '<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
 const VIDICO = '<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10.5l5-3v9l-5-3z"/></svg>';
 const FLIPICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 01-13.7 5.6L4 15M4 20v-5h5"/></svg>';
-const SNDICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>';
+const SNDICO = '<svg class="son" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg><svg class="soff" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l5 4V6l-5 4zM16 9.5l5 5M21 9.5l-5 5"/></svg>';
 const BONES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
 const JOINTS = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
 const VIEW = {
@@ -1415,10 +1460,7 @@ function camClose() {
 function camStream(c) {
   return navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:c.face, width:{ideal:640}, height:{ideal:480}}});
 }
-function camAudio() {
-  try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) { actx = actx || new AC(); if (actx.state === 'suspended') actx.resume(); } } catch (e) {}
-  try { if (window.speechSynthesis) { speechSynthesis.getVoices(); speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } } catch (e) {}
-}
+function camAudio() { unlockSound(); }
 function recStart(c) {   // keep the set on the phone so it can be gone through rep by rep afterwards
   c.rec = null; c.recBlob = null;
   try {
@@ -1484,23 +1526,10 @@ async function camFlip() {
   } catch (e) { if (C === c) camEnd(); }
   c.busy = false;
 }
-function camSay(t, tone) {
+function camSay(t, tone) {   // a tone right away (it plays even if speech can't), then the words
   if (!C || !C.sound) return;
-  try {
-    const ss = window.speechSynthesis, vo = ss && ss.getVoices().find(v => /^ar/i.test(v.lang));
-    if (vo) { ss.cancel(); const u = new SpeechSynthesisUtterance(t); u.voice = vo; u.lang = vo.lang; u.rate = 1.1; ss.speak(u); return; }
-  } catch (e) {}
-  try {
-    if (actx) (tone === 'ok' ? [[1040, 0]] : tone === 'skip' ? [[520, 0]] : [[330, 0], [330, .22]]).forEach(([hz, dt]) => {
-      const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + dt;
-      o.frequency.value = hz;
-      g.gain.setValueAtTime(.0001, t0);
-      g.gain.exponentialRampToValueAtTime(.3, t0 + .02);
-      g.gain.exponentialRampToValueAtTime(.0001, t0 + .16);
-      o.connect(g); g.connect(actx.destination);
-      o.start(t0); o.stop(t0 + .18);
-    });
-  } catch (e) {}
+  playTone(tone);
+  setTimeout(() => { if (C && C.sound) speak(t); }, 180);
 }
 function camMsg(text, cls) {
   if (C.msg === text) return;
@@ -1770,6 +1799,7 @@ function camRender() {
     <div class="ptitle"><h2>خلّي الكاميرا تشوف تكنيكك</h2><p class="csub">اختياري · طريقتين: مباشر وانت تتمرن، لو تحليل فيديو</p></div>
     ${c.err ? `<p class="cerr" role="alert">${c.err}</p>` : ''}
     ${ways}
+    ${CAM_LIVE ? `<div class="csnd"><button class="ghost" data-c="testsnd">${SNDICO}جرّب الصوت</button><p class="cnote">يحچي الملاحظة بصوت، وإذا تلفونك ما بي صوت عربي يطلّع نغمات: وحدة عالية = صح، وثنتين واطية = تعدّل. علّي صوت التلفون.</p></div>` : ''}
     <div class="csec"><h3>شلون تصوّر</h3><ol class="cues"><li><span>${V.t}. الفحص يصير <b>${V.b}</b>.</span></li><li><span>${V.far}.</span></li><li><span>ابدأ من وضعية البداية واثبت لحظة قبل أول عدّة.</span></li></ol></div>
     <div class="csec"><h3>شنو يفحص بهذا التمرين</h3><ul class="meta">${labels.map(l => `<li>${l}</li>`).join('')}<li>عدّ العدّات</li><li>السرعة</li></ul></div>
     <p class="cnote"><b>صارم:</b> يكول «صح» بس إذا العدّة كاملة ونظيفة. أي حركة مو حركة التمرين يكلك «ما حسبتها» وما يعدّها.</p>
@@ -1793,7 +1823,8 @@ document.addEventListener('click', e => {
   else if (a === 'cancel') { anaDrop(C); C.step = 'intro'; camRender(); }
   else if (a === 'play') camPlay(b.dataset.i);
   else if (a === 'unplay') camUnplay();
-  else if (a === 'sound') { C.sound = !C.sound; save(K_CAM, {sound:C.sound}); b.setAttribute('aria-pressed', C.sound); if (!C.sound) try { speechSynthesis.cancel(); } catch (err) {} }
+  else if (a === 'sound') { C.sound = !C.sound; save(K_CAM, {sound:C.sound}); b.setAttribute('aria-pressed', C.sound); if (C.sound) { unlockSound(); camSay('الصوت شغّال', 'ok'); } else try { speechSynthesis.cancel(); } catch (err) {} }
+  else if (a === 'testsnd') { unlockSound(); C.sound = true; save(K_CAM, {sound:true}); camSay('الصوت شغّال', 'ok'); b.textContent = 'إذا سمعت الصوت، تمام'; }
 });
 document.addEventListener('change', e => {
   const i = e.target.closest('#cam input[data-c="file"]');
